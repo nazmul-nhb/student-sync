@@ -38,9 +38,7 @@
 
         <!-- Password -->
         <div class="mb-4">
-          <label for="password" class="block mb-1 text-gray-600"
-            >Password</label
-          >
+          <label for="password" class="block mb-1 text-gray-600">Password</label>
           <input
             id="password"
             name="password"
@@ -54,16 +52,20 @@
           </div>
         </div>
 
-        <!-- Image -->
+        <!-- Image File -->
         <div class="mb-4">
-          <label for="image" class="block mb-1 text-gray-600">Image URL</label>
+          <label for="imageFile" class="block mb-1 text-gray-600">Profile Image</label>
           <input
-            id="image"
-            name="image"
-            type="text"
-            v-model="user.image"
+            id="imageFile"
+            name="imageFile"
+            type="file"
+            @change="handleImageUpload"
+            accept="image/png, image/jpeg"
             class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
           />
+          <div v-if="imageError" class="text-sm text-red-600">
+            {{ imageError }}
+          </div>
         </div>
 
         <button
@@ -82,8 +84,10 @@ import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { IUserRegister } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
+import { useCloudinary } from '@/hooks/useCloudinary';
 
 const { registerUser } = useAuthStore();
+const { uploadImage } = useCloudinary();
 
 const router = useRouter();
 
@@ -95,45 +99,56 @@ const user = reactive<IUserRegister>({
   image: '',
 });
 
-// Define error state
+// Define error states
 const nameError = ref('');
 const emailError = ref('');
 const passwordError = ref('');
+const imageError = ref('');
+const selectedFile = ref<File | null>(null); // Holds the selected image file
 
 // Validation for name
 const validateName = () => {
   const name = user.name.trim();
-  if (!name) {
-    nameError.value = 'Name is required';
-  } else {
-    nameError.value = '';
-  }
+  nameError.value = name ? '' : 'Name is required';
 };
 
 // Validation for email
 const validateEmail = () => {
   const email = user.email.trim();
-  if (!email) {
-    emailError.value = 'Email is required';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    emailError.value = 'Enter a valid email';
-  } else {
-    emailError.value = '';
-  }
+  emailError.value = !email
+    ? 'Email is required'
+    : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+      ? 'Enter a valid email'
+      : '';
 };
 
 // Validation for password
 const validatePassword = () => {
   const password = user.password;
-  if (!password) {
-    passwordError.value = 'Password is required';
-  } else if (password.length < 8) {
-    passwordError.value = 'Password must be at least 8 characters long';
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)) {
-    passwordError.value =
-      'Password must contain at least 6 characters, upper and lower case letters, a number, and a symbol';
+  passwordError.value = !password
+    ? 'Password is required'
+    : password.length < 8
+      ? 'Password must be at least 8 characters long'
+      : !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)
+        ? 'Password must contain upper/lower case letters, a number, and a symbol'
+        : '';
+};
+
+// Handle image file selection
+const handleImageUpload = (event: Event) => {
+  const files = (event.target as HTMLInputElement).files;
+  if (files && files[0]) {
+    const file = files[0];
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+      selectedFile.value = file;
+      imageError.value = ''; // Clear error if file type is valid
+    } else {
+      imageError.value = 'Only JPG and PNG files are allowed';
+      selectedFile.value = null; // Reset selected file
+    }
   } else {
-    passwordError.value = '';
+    imageError.value = 'Image is required'; // Set error if no file is selected
+    selectedFile.value = null; // Reset selected file
   }
 };
 
@@ -143,11 +158,33 @@ const handleRegister = async () => {
   validateEmail();
   validatePassword();
 
-  if (!nameError.value && !emailError.value && !passwordError.value) {
-    const { success } = await registerUser(user);
+  // Check if an image file is selected
+  if (!selectedFile.value) {
+    imageError.value = 'Image is required';
+  } else {
+    imageError.value = ''; // Clear image error if file is present
+  }
 
-    if (success) {
-      router.push('/login');
+  // Only proceed if there are no errors
+  if (
+    !nameError.value &&
+    !emailError.value &&
+    !passwordError.value &&
+    !imageError.value
+  ) {
+    try {
+      // Upload the selected image file if available
+      if (selectedFile.value) {
+        user.image = await uploadImage(selectedFile.value);
+      }
+
+      const { success } = await registerUser(user);
+
+      if (success) {
+        router.push('/login');
+      }
+    } catch (error) {
+      console.error('Image upload or registration failed:', error);
     }
   } else {
     console.log('Validation failed');

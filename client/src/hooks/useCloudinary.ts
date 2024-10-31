@@ -1,18 +1,15 @@
-// src/hooks/useCloudinarySigned.ts
+import type { ISignatureData } from '@/types/interfaces';
 import { cloudinaryApiKey, imageUploadUrl } from '@/utilities/constants';
 import axios from 'axios';
+import { useAxiosPublic } from './useAxiosPublic';
 
-interface SignatureData {
-  signature: string;
-  timestamp: number;
-}
+export const useCloudinary = () => {
+  const axiosPublic = useAxiosPublic();
 
-export const useCloudinarySigned = () => {
   const uploadImage = async (file: File): Promise<string> => {
     // Request a signed signature for the upload
-    const { data: signatureData } = await axios.post<SignatureData>(
-      '/api/upload-signature',
-    );
+    const { data: signatureData } =
+      await axiosPublic.post<ISignatureData>('/upload/image');
 
     // Prepare form data for the Cloudinary upload
     const formData = new FormData();

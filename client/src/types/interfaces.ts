@@ -26,3 +26,8 @@ export interface IUser extends Omit<IUserRegister, 'password'> {
   created: Date | string;
   __v: number;
 }
+
+export interface ISignatureData {
+  signature: string;
+  timestamp: number;
+}
