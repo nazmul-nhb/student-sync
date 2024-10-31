@@ -14,7 +14,7 @@ const downloadPDF = () => {
   const options = {
     margin: 0.5,
     filename: `${currentUser.value ? currentUser.value.name : 'User'}-${timestamp}.pdf`,
-    html2canvas: { scale: 3, scrollX: 0, scrollY: 0, useCORS: true },
+    html2canvas: { scale: 2, scrollX: 0, scrollY: 0, useCORS: true },
     jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' },
   };
 
