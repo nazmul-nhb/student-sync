@@ -5,6 +5,7 @@ import { PORT } from './utils/constants';
 import { connectDB } from './configs/db';
 import { IErrorObject } from './types/interfaces';
 import authRoutes from './routes/authRoutes';
+import uploadRoutes from './routes/uploadRoutes';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.get('/', (_req: Request, res: Response) => {
 
 // Actual Routes
 app.use('/auth', authRoutes);
+app.use('/upload', uploadRoutes);
 
 // Error handler for 404
 app.use((req: Request, _res: Response, next: NextFunction) => {
