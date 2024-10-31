@@ -1,6 +1,7 @@
 // src/stores/useAuthStore.js
-import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
+import { AxiosError } from 'axios';
+import { watchEffect } from 'vue';
 import { defineStore } from 'pinia';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'vue3-toastify';
@@ -28,6 +29,17 @@ export const useAuthStore = defineStore('auth', {
         this.currentUser = jwtDecode(token);
       }
       this.userLoading = false;
+    },
+
+    waitUntilUserLoaded() {
+      return new Promise<void>(resolve => {
+        const unwatch = watchEffect(() => {
+          if (!this.userLoading) {
+            unwatch();
+            resolve();
+          }
+        });
+      });
     },
 
     async registerUser(

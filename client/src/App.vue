@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
+import Loader from './components/Loader.vue';
+import { useAuthStore } from '@/stores/auth';
+
+const authStore = useAuthStore();
 </script>
 
 <template>
@@ -9,8 +13,8 @@ import { RouterLink, RouterView } from 'vue-router';
       <RouterLink to="/about">About</RouterLink>
     </nav>
   </header>
-
-  <RouterView />
+  <Loader v-if="authStore.userLoading" />
+  <RouterView v-else />
 </template>
 
 <style scoped></style>

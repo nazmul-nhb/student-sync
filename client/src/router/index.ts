@@ -1,23 +1,45 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
+      name: 'Home',
       component: HomeView,
+      meta: { requiresAuth: true },
     },
     {
       path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
+      name: 'About',
       component: () => import('../views/AboutView.vue'),
+      meta: { requiresAuth: false },
     },
+    // {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: () => import('../views/LoginView.vue'),
+    // },
   ],
-})
+});
 
-export default router
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+
+  // Only wait for `userLoading` if the route requires authentication
+  if (to.meta.requiresAuth) {
+    await authStore.waitUntilUserLoaded();
+
+    // Redirect if authentication is required but the user is not logged in
+    if (!authStore.currentUser) {
+      return next({ path: '/login', query: { redirect: to.fullPath } });
+    }
+  }
+
+  // Allow navigation for non-authenticated routes or authenticated users
+  next();
+});
+
+export default router;
