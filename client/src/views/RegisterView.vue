@@ -79,10 +79,13 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import type { IUserRegister } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 
 const { registerUser } = useAuthStore();
+
+const router = useRouter();
 
 // Define the form state
 const user = reactive<IUserRegister>({
@@ -141,15 +144,13 @@ const handleRegister = async () => {
   validatePassword();
 
   if (!nameError.value && !emailError.value && !passwordError.value) {
-    // Handle successful registration
-    console.log('Form is valid, proceed with registration', user);
-    await registerUser(user);
+    const { success } = await registerUser(user);
+
+    if (success) {
+      router.push('/login');
+    }
   } else {
-    console.log('Validation failed', {
-      nameError: nameError.value,
-      emailError: emailError.value,
-      passwordError: passwordError.value,
-    });
+    console.log('Validation failed');
   }
 };
 </script>

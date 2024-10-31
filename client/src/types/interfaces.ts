@@ -26,14 +26,3 @@ export interface IUser extends Omit<IUserRegister, 'password'> {
   created: Date | string;
   __v: number;
 }
-
-export interface ILoginValidation {
-  email: {
-    required: boolean;
-    emailRule: boolean;
-  };
-  password: {
-    required: boolean;
-    passwordRule: boolean;
-  };
-}

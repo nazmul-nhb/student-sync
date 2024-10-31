@@ -32,10 +32,11 @@ export const useAuthStore = defineStore('auth', {
     },
 
     waitUntilUserLoaded() {
+      let unwatch: (() => void) | null = null;
       return new Promise<void>(resolve => {
-        const unwatch = watchEffect(() => {
+        unwatch = watchEffect(() => {
           if (!this.userLoading) {
-            unwatch();
+            if (unwatch) unwatch();
             resolve();
           }
         });

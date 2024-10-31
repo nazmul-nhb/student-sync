@@ -37,17 +37,16 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
 
-  // Only wait for `userLoading` if the route requires authentication
+  // Wait until user loading completes if the route requires authentication
   if (to.meta.requiresAuth) {
     await authStore.waitUntilUserLoaded();
 
-    // Redirect if authentication is required but the user is not logged in
+    // If not authenticated, redirect to login with the attempted path
     if (!authStore.currentUser) {
       return next({ path: '/login', query: { redirect: to.fullPath } });
     }
   }
-
-  // Allow navigation for non-authenticated routes or authenticated users
+  // Allow navigation for authenticated users or public routes
   next();
 });
 

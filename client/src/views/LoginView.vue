@@ -48,10 +48,15 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import type { ICredentials } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 
 const { loginUser } = useAuthStore();
+
+const router = useRouter();
+const route = useRoute();
+const redirect = route.query.redirect || '/';
 
 // Define the form state
 const user = reactive<ICredentials>({ email: '', password: '' });
@@ -98,9 +103,11 @@ const handleLogin = async () => {
   validatePassword();
 
   if (!emailError.value && !passwordError.value) {
-    // Handle successful login
-    console.log('Form is valid, proceed with login', user);
-    await loginUser(user);
+    const { success } = await loginUser(user);
+
+    if (success) {
+      router.push(redirect as string);
+    }
   } else {
     console.log('Validation failed', {
       emailError: emailError.value,
