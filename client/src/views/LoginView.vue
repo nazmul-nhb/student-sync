@@ -4,50 +4,39 @@
       <h2 class="mb-4 text-2xl font-semibold text-center">Login</h2>
       <form @submit.prevent="handleLogin">
         <!-- Email -->
-        <div class="mb-4">
-          <label for="email" class="block mb-1 text-gray-600">Email</label>
+        <div class="input-div">
+          <label for="email" class="label"><SiMaildotru /></label>
           <input
             id="email"
             name="email"
             type="email"
             v-model="user.email"
             @blur="validateEmail"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
+            placeholder="Enter your email"
+            class="input"
           />
-          <div v-if="emailError" class="text-sm text-red-600">
-            {{ emailError }}
-          </div>
         </div>
         <!-- Password -->
-        <div class="mb-4 relative">
-          <label for="password" class="block mb-1 text-gray-600"
-            >Password</label
-          >
+        <div class="input-div relative">
+          <label for="password" class="label"><RiLockPasswordFill /></label>
           <input
             id="password"
             name="password"
             :type="isPasswordVisible ? 'text' : 'password'"
             v-model="user.password"
             @blur="validatePassword"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
+            placeholder="Enter your password"
+            class="input"
           />
           <span
             @click="togglePasswordVisibility"
-            class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+            class="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
           >
             <FaEye v-if="isPasswordVisible" />
             <FaEyeSlash v-else />
           </span>
-          <div v-if="passwordError" class="text-sm text-red-600">
-            {{ passwordError }}
-          </div>
         </div>
-        <button
-          type="submit"
-          class="w-full px-3 py-2 font-semibold text-white bg-blue-500 rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
+        <button type="submit" class="w-full button">Login</button>
       </form>
     </div>
   </section>
@@ -59,6 +48,10 @@ import { useRouter, useRoute } from 'vue-router';
 import type { ICredentials } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
+import { RiLockPasswordFill } from 'vue3-icons/ri';
+import { SiMaildotru } from 'vue3-icons/si';
+import { toast } from 'vue3-toastify';
+import { watch } from 'vue';
 
 const { loginUser } = useAuthStore();
 
@@ -112,6 +105,19 @@ const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
 
+// Watch for email and password errors
+watch(emailError, newError => {
+  if (newError) {
+    toast.error(newError);
+  }
+});
+
+watch(passwordError, newError => {
+  if (newError) {
+    toast.error(newError);
+  }
+});
+
 // Handle login logic
 const handleLogin = async () => {
   validateEmail();
@@ -124,12 +130,46 @@ const handleLogin = async () => {
       router.push(redirect as string);
     }
   } else {
-    console.log('Validation failed', {
-      emailError: emailError.value,
-      passwordError: passwordError.value,
-    });
+    if (emailError.value) {
+      toast.error(emailError.value);
+    } else if (passwordError.value) {
+      toast.error(passwordError.value);
+    }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.input-div {
+  @apply mb-4 flex items-center gap-1.5;
+}
+
+.label {
+  @apply p-3 rounded text-gray-600 border border-gray-700/15 shadow-md shadow-gray-700;
+}
+
+.input {
+  @apply w-full px-3 py-2 rounded outline-none border border-gray-700/15 shadow-md shadow-gray-700 transition-all duration-500 ease-in-out;
+}
+
+.input:focus {
+  @apply bg-gray-200 -translate-y-1;
+}
+
+.button {
+  @apply font-semibold border bg-blue-900 text-white border-blue-800/15 rounded-lg shadow-md shadow-blue-900 px-3 py-1.5 transition-all duration-500 ease-in-out;
+}
+
+.button:hover {
+  @apply bg-blue-600 -translate-y-1; /* Lift the button slightly */
+}
+
+.button:focus {
+  @apply shadow-md shadow-blue-500;
+}
+
+/* Add the click effect */
+.button:active {
+  @apply transform translate-y-1 bg-blue-200 text-blue-800 shadow-sm shadow-blue-800; /* Move down when pressed */
+}
+</style>

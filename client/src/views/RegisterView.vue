@@ -5,49 +5,44 @@
 
       <form @submit.prevent="handleRegister">
         <!-- Name -->
-        <div class="mb-4">
-          <label for="name" class="block mb-1 text-gray-600">Name</label>
+        <div class="input-div">
+          <label for="name" class="label"><FaUserEdit /></label>
           <input
             id="name"
             name="name"
             type="text"
             v-model="user.name"
             @blur="validateName"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
+            placeholder="Enter your name"
+            class="input"
           />
-          <div v-if="nameError" class="text-sm text-red-600">
-            {{ nameError }}
-          </div>
         </div>
 
         <!-- Email -->
-        <div class="mb-4">
-          <label for="email" class="block mb-1 text-gray-600">Email</label>
+        <div class="input-div">
+          <label for="email" class="label"><SiMaildotru /></label>
           <input
             id="email"
             name="email"
             type="email"
+            placeholder="Enter your email"
             v-model="user.email"
             @blur="validateEmail"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
+            class="input"
           />
-          <div v-if="emailError" class="text-sm text-red-600">
-            {{ emailError }}
-          </div>
         </div>
 
         <!-- Password -->
-        <div class="mb-4 relative">
-          <label for="password" class="block mb-1 text-gray-600"
-            >Password</label
-          >
+        <div class="input-div relative">
+          <label for="password" class="label"><RiLockPasswordFill /> </label>
           <input
             id="password"
             name="password"
+            placeholder="Create your password"
             :type="isPasswordVisible ? 'text' : 'password'"
             v-model="user.password"
             @blur="validatePassword"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
+            class="input"
           />
           <span
             @click="togglePasswordVisibility"
@@ -56,32 +51,25 @@
             <FaEye v-if="isPasswordVisible" />
             <FaEyeSlash v-else />
           </span>
-          <div v-if="passwordError" class="text-sm text-red-600">
-            {{ passwordError }}
-          </div>
         </div>
 
         <!-- Image File -->
-        <div class="mb-4">
-          <label for="imageFile" class="block mb-1 text-gray-600"
-            >Profile Image</label
-          >
+        <div class="input-div">
+          <label for="imageFile" class="label"><FaImage /> </label>
           <input
             id="imageFile"
             name="imageFile"
             type="file"
+            placeholder="Choose your profile picture"
             @change="handleImageUpload"
             accept="image/png, image/jpeg"
-            class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
+            class="input"
           />
-          <div v-if="imageError" class="text-sm text-red-600">
-            {{ imageError }}
-          </div>
         </div>
 
         <button
           type="submit"
-          class="w-full px-3 py-2 font-semibold text-white bg-green-500 rounded hover:bg-green-600"
+          class="w-full button"
         >
           Register
         </button>
@@ -96,7 +84,12 @@ import { useRouter } from 'vue-router';
 import type { IUserRegister } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { useCloudinary } from '@/hooks/useCloudinary';
-import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
+import { FaEye, FaEyeSlash, FaUserEdit } from 'vue3-icons/fa';
+import { FaImage } from 'vue3-icons/fa6';
+import { RiLockPasswordFill } from 'vue3-icons/ri';
+import { SiMaildotru } from 'vue3-icons/si';
+import { watch } from 'vue';
+import { toast } from 'vue3-toastify';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -170,6 +163,31 @@ const handleImageUpload = (event: Event) => {
   }
 };
 
+// Watch for email and password errors
+watch(nameError, newError => {
+  if (newError) {
+    toast.error(newError);
+  }
+});
+
+watch(emailError, newError => {
+  if (newError) {
+    toast.error(newError);
+  }
+});
+
+watch(passwordError, newError => {
+  if (newError) {
+    toast.error(newError);
+  }
+});
+
+watch(imageError, newError => {
+  if (newError) {
+    toast.error(newError);
+  }
+});
+
 // Handle registration logic
 const handleRegister = async () => {
   validateName();
@@ -205,11 +223,50 @@ const handleRegister = async () => {
       console.error('Image upload or registration failed:', error);
     }
   } else {
-    console.log('Validation failed');
+    if (nameError.value) {
+      toast.error(nameError.value);
+    } else if (emailError.value) {
+      toast.error(emailError.value);
+    } else if (passwordError.value) {
+      toast.error(passwordError.value);
+    } else if (imageError.value) {
+      toast.error(imageError.value);
+    }
   }
 };
 </script>
 
 <style scoped>
-/* Add any additional styles here if needed */
+.input-div {
+  @apply mb-4 flex items-center gap-1.5;
+}
+
+.label {
+  @apply p-3 rounded text-gray-600 border border-gray-700/15 shadow-md shadow-gray-700;
+}
+
+.input {
+  @apply w-full px-3 py-2 rounded outline-none border border-gray-700/15 shadow-md shadow-gray-700 transition-all duration-500 ease-in-out;
+}
+
+.input:focus {
+  @apply bg-gray-200 -translate-y-1;
+}
+
+.button {
+  @apply font-semibold border bg-blue-900 text-white border-blue-800/15 rounded-lg shadow-md shadow-blue-900 px-3 py-1.5 transition-all duration-500 ease-in-out;
+}
+
+.button:hover {
+  @apply bg-blue-600 -translate-y-1; /* Lift the button slightly */
+}
+
+.button:focus {
+  @apply shadow-md shadow-blue-500;
+}
+
+/* Add the click effect */
+.button:active {
+  @apply transform translate-y-1 bg-blue-200 text-blue-800 shadow-sm shadow-blue-800; /* Move down when pressed */
+}
 </style>
