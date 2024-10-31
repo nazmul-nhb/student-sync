@@ -12,23 +12,28 @@ import type {
   IStatusResponse,
   IErrorResponse,
   IUserRegister,
+  IUser,
 } from '@/types/interfaces';
 
 const axiosPublic = useAxiosPublic();
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    currentUser: null,
-    userLoading: false,
+    currentUser: null as IUser | null,
+    userLoading: false as boolean,
   }),
 
   actions: {
     async initializeUser() {
+      this.userLoading = true; // Set loading to true while checking for user
       const token = localStorage.getItem('student-token');
       if (token) {
         this.currentUser = jwtDecode(token);
+        console.log(this.currentUser);
+      } else {
+        this.currentUser = null; // Explicitly set to null if no token is found
       }
-      this.userLoading = false;
+      this.userLoading = false; // Set loading to false after checking
     },
 
     waitUntilUserLoaded() {
@@ -103,9 +108,9 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    logOut() {
+    async logOut(): Promise<boolean> {
       if (this.currentUser) {
-        Swal.fire({
+        const result = await Swal.fire({
           title: 'Are You Sure?',
           text: 'Want to Log Out Now?',
           icon: 'warning',
@@ -113,16 +118,19 @@ export const useAuthStore = defineStore('auth', {
           confirmButtonColor: '#ff0000',
           cancelButtonColor: '#2a7947',
           confirmButtonText: 'Log Out!',
-        }).then(result => {
-          if (result.isConfirmed) {
-            localStorage.removeItem('student-token');
-            this.currentUser = null;
-            toast.success('Logged Out!');
-          }
         });
+
+        if (result.isConfirmed) {
+          localStorage.removeItem('student-token');
+          this.currentUser = null; // Clear the current user
+          toast.success('Logged Out!');
+          return true; // Logout confirmed
+        }
+        return false; // Logout canceled
       } else {
         // In case there is no user logged in (dev purpose)
         toast.error('No User Logged In!');
+        return false; // No user was logged in
       }
     },
   },

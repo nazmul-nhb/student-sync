@@ -2,19 +2,19 @@
 import { RouterLink, RouterView } from 'vue-router';
 import Loader from './components/Loader.vue';
 import { useAuthStore } from '@/stores/auth';
+import Navbar from './components/Navbar.vue';
 
 const authStore = useAuthStore();
 </script>
 
 <template>
   <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-    </nav>
+    <Navbar />
   </header>
-  <Loader v-if="authStore.userLoading" />
-  <RouterView v-else />
+  <main class="min-h[calc(100vh-80px)] mt-28">
+    <Loader v-if="authStore.userLoading" />
+    <RouterView v-else />
+  </main>
 </template>
 
 <style scoped></style>

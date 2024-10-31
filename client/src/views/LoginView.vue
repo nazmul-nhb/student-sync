@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <section class="flex items-center justify-center bg-gray-100">
     <div class="w-full max-w-sm p-6 bg-white rounded shadow-md">
       <h2 class="mb-4 text-2xl font-semibold text-center">Login</h2>
       <form @submit.prevent="handleLogin">
@@ -43,7 +43,7 @@
         </button>
       </form>
     </div>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">

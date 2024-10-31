@@ -23,8 +23,10 @@ export interface IErrorResponse extends IStatusResponse {
 
 export interface IUser extends Omit<IUserRegister, 'password'> {
   _id: string;
-  created: Date | string;
   __v: number;
+  exp: number;
+  iat: number;
+  created: Date | string;
 }
 
 export interface ISignatureData {
