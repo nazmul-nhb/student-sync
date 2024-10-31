@@ -16,6 +16,7 @@
     "@tanstack/vue-query": "^5.59.16",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
+    "html2pdf.js": "^0.10.2",
     "jwt-decode": "^4.0.0",
     "notiflix": "^3.2.7",
     "pinia": "^2.2.4",

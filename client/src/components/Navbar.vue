@@ -69,8 +69,6 @@ const authStore = useAuthStore();
 const currentUser = computed(() => authStore.currentUser);
 const userLoading = computed(() => authStore.userLoading);
 
-console.log(currentUser);
-
 const handleLogout = async () => {
   const loggedOut = await authStore.logOut();
   if (loggedOut) {
