@@ -3,6 +3,4 @@ import axios, { type AxiosInstance } from 'axios';
 
 const axiosPublic: AxiosInstance = axios.create({ baseURL: baseUrl });
 
-export const useAxiosPublic = (): AxiosInstance => {
-  return axiosPublic;
-};
+export const useAxiosPublic = (): AxiosInstance => axiosPublic;
