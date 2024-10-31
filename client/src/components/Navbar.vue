@@ -12,7 +12,7 @@
         <!-- Nav Links -->
         <div class="flex items-center justify-between gap-8">
           <RouterLink
-            v-if="!userLoading && currentUser"
+            v-if="!isUserLoading && currentUser"
             to="/"
             active-class="active-link"
             class="inactive-link"
@@ -26,7 +26,7 @@
           >
         </div>
         <!-- Profile -->
-        <div v-if="userLoading">Loading...</div>
+        <div v-if="isUserLoading">Loading...</div>
         <div v-else class="flex items-center gap-4">
           <span v-if="currentUser">{{ currentUser.name }}</span>
           <img
@@ -58,16 +58,16 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import logo from '../assets/icons/logo.png';
-import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
 const authStore = useAuthStore();
 
 const currentUser = computed(() => authStore.currentUser);
-const userLoading = computed(() => authStore.isUserLoading);
+const isUserLoading = computed(() => authStore.isUserLoading);
 
 const handleLogout = async () => {
   const loggedOut = await authStore.logOut();

@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
-import Loader from './components/Loader.vue';
+import { computed } from 'vue';
+import { RouterView } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
+import Loader from './components/Loader.vue';
 import Navbar from './components/Navbar.vue';
 
-const { isUserLoading } = useAuthStore();
+const authStore = useAuthStore();
+
+const isUserLoading = computed(() => authStore.isUserLoading);
 </script>
 
 <template>

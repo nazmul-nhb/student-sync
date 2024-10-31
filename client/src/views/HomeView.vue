@@ -137,7 +137,7 @@ const downloadPDF = () => {
 
 <style scoped>
 .button {
-  @apply font-semibold border border-gray-700/75 rounded-lg shadow-md shadow-gray-700 px-3 py-1.5 transition-all duration-300 ease-in-out;
+  @apply font-semibold border border-gray-700/15 rounded-lg shadow-md shadow-gray-700 px-3 py-1.5 transition-all duration-300 ease-in-out;
 }
 
 .button:hover {
