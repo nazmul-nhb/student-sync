@@ -1,14 +1,15 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { PORT } from './utils/constants';
 import { connectDB } from './configs/db';
 import { IErrorObject } from './types/interfaces';
-import exampleRoutes from './routes/exampleRoutes';
+import authRoutes from './routes/authRoutes';
 
 dotenv.config();
 
 const app: Application = express();
-const port = process.env.PORT || 4242;
+const port = PORT || 4242;
 
 // Middlewares
 // TODO: Add CORS Options when project is done!
@@ -21,7 +22,7 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 // Actual Routes
-app.use('/example', exampleRoutes);
+app.use('/auth', authRoutes);
 
 // Error handler for 404
 app.use((req: Request, _res: Response, next: NextFunction) => {
@@ -56,4 +57,3 @@ const startServer = async () => {
 startServer().catch(console.dir);
 
 export default app;
-

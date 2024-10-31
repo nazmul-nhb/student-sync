@@ -1,7 +1,6 @@
-import { TPassword } from '../types/types';
 import { IValidationResult } from '../types/interfaces';
 
-export const validatePassword = (password: TPassword): IValidationResult => {
+export const validatePassword = (password: unknown): IValidationResult => {
 	// Check for proper type
 	if (typeof password !== 'string') {
 		return {
