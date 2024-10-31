@@ -67,12 +67,7 @@
           />
         </div>
 
-        <button
-          type="submit"
-          class="w-full button"
-        >
-          Register
-        </button>
+        <button type="submit" class="w-full button">Register</button>
       </form>
     </div>
   </section>
@@ -88,8 +83,8 @@ import { FaEye, FaEyeSlash, FaUserEdit } from 'vue3-icons/fa';
 import { FaImage } from 'vue3-icons/fa6';
 import { RiLockPasswordFill } from 'vue3-icons/ri';
 import { SiMaildotru } from 'vue3-icons/si';
-import { watch } from 'vue';
 import { toast } from 'vue3-toastify';
+import { isValidEmail, isValidPassword } from '@/utilities/validation';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -114,30 +109,46 @@ const isPasswordVisible = ref(false);
 
 // Validation for name
 const validateName = () => {
+  nameError.value = '';
   const name = user.name.trim();
   nameError.value = name ? '' : 'Name is required';
+
+  if (nameError.value) {
+    toast.error(nameError.value);
+  }
 };
 
 // Validation for email
 const validateEmail = () => {
+  emailError.value = '';
   const email = user.email.trim();
   emailError.value = !email
     ? 'Email is required'
-    : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    : !isValidEmail(email)
       ? 'Enter a valid email'
       : '';
+
+  if (emailError.value) {
+    toast.error(emailError.value);
+  }
 };
 
 // Validation for password
 const validatePassword = () => {
+  passwordError.value = '';
+
   const password = user.password;
   passwordError.value = !password
     ? 'Password is required'
     : password.length < 8
       ? 'Password must be at least 8 characters long'
-      : !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)
-        ? 'Password must contain upper/lower case letters, a number, and a symbol'
+      : !isValidPassword(password)
+        ? 'Password must contain at least one upper and lower case letters, a number, and a symbol'
         : '';
+
+  if (passwordError.value) {
+    toast.error(passwordError.value);
+  }
 };
 
 // Toggle password visibility
@@ -147,6 +158,8 @@ const togglePasswordVisibility = () => {
 
 // Handle image file selection
 const handleImageUpload = (event: Event) => {
+  imageError.value = '';
+
   const files = (event.target as HTMLInputElement).files;
   if (files && files[0]) {
     const file = files[0];
@@ -161,32 +174,11 @@ const handleImageUpload = (event: Event) => {
     imageError.value = 'Image is required'; // Set error if no file is selected
     selectedFile.value = null; // Reset selected file
   }
+
+  if (imageError.value) {
+    toast.error(imageError.value);
+  }
 };
-
-// Watch for email and password errors
-watch(nameError, newError => {
-  if (newError) {
-    toast.error(newError);
-  }
-});
-
-watch(emailError, newError => {
-  if (newError) {
-    toast.error(newError);
-  }
-});
-
-watch(passwordError, newError => {
-  if (newError) {
-    toast.error(newError);
-  }
-});
-
-watch(imageError, newError => {
-  if (newError) {
-    toast.error(newError);
-  }
-});
 
 // Handle registration logic
 const handleRegister = async () => {
@@ -199,6 +191,10 @@ const handleRegister = async () => {
     imageError.value = 'Image is required';
   } else {
     imageError.value = ''; // Clear image error if file is present
+  }
+
+  if (imageError.value) {
+    return toast.error(imageError.value);
   }
 
   // Only proceed if there are no errors
@@ -220,17 +216,9 @@ const handleRegister = async () => {
         router.push('/login');
       }
     } catch (error) {
-      console.error('Image upload or registration failed:', error);
-    }
-  } else {
-    if (nameError.value) {
-      toast.error(nameError.value);
-    } else if (emailError.value) {
-      toast.error(emailError.value);
-    } else if (passwordError.value) {
-      toast.error(passwordError.value);
-    } else if (imageError.value) {
-      toast.error(imageError.value);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     }
   }
 };

@@ -51,7 +51,7 @@ import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
 import { RiLockPasswordFill } from 'vue3-icons/ri';
 import { SiMaildotru } from 'vue3-icons/si';
 import { toast } from 'vue3-toastify';
-import { watch } from 'vue';
+import { isValidEmail, isValidPassword } from '@/utilities/validation';
 
 const { loginUser } = useAuthStore();
 
@@ -70,6 +70,8 @@ const isPasswordVisible = ref(false);
 
 // Validation functions
 const validateEmail = () => {
+  emailError.value = '';
+
   const email = user.email.trim();
   if (!email) {
     emailError.value = 'Email is required';
@@ -78,26 +80,30 @@ const validateEmail = () => {
   } else {
     emailError.value = '';
   }
+
+  if (emailError.value) {
+    toast.error(emailError.value);
+  }
 };
 
 const validatePassword = () => {
+  passwordError.value = '';
+
   const password = user.password;
   if (!password) {
     passwordError.value = 'Password is required';
   } else if (password.length < 8) {
     passwordError.value = 'Password must be at least 8 characters long';
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)) {
+  } else if (!isValidPassword(password)) {
     passwordError.value =
-      'Password must contain at least 6 characters, upper and lower case letters, a number, and a symbol';
+      'Password must contain at least one upper and lower case letters, a number, and a symbol';
   } else {
     passwordError.value = '';
   }
-};
 
-// Regex function for email validation
-const isValidEmail = (email: string) => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailPattern.test(email);
+  if (passwordError.value) {
+    toast.error(passwordError.value);
+  }
 };
 
 // Toggle password visibility
@@ -105,35 +111,22 @@ const togglePasswordVisibility = () => {
   isPasswordVisible.value = !isPasswordVisible.value;
 };
 
-// Watch for email and password errors
-watch(emailError, newError => {
-  if (newError) {
-    toast.error(newError);
-  }
-});
-
-watch(passwordError, newError => {
-  if (newError) {
-    toast.error(newError);
-  }
-});
-
 // Handle login logic
 const handleLogin = async () => {
   validateEmail();
   validatePassword();
 
   if (!emailError.value && !passwordError.value) {
-    const { success } = await loginUser(user);
+    try {
+      const { success } = await loginUser(user);
 
-    if (success) {
-      router.push(redirect as string);
-    }
-  } else {
-    if (emailError.value) {
-      toast.error(emailError.value);
-    } else if (passwordError.value) {
-      toast.error(passwordError.value);
+      if (success) {
+        router.push(redirect as string);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     }
   }
 };
