@@ -68,7 +68,9 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async login(user: ICredentials): Promise<ILoginResponse | IErrorResponse> {
+    async loginUser(
+      user: ICredentials,
+    ): Promise<ILoginResponse | IErrorResponse> {
       this.userLoading = true;
       try {
         const { data } = await axiosPublic.post<ILoginResponse>(
