@@ -20,12 +20,12 @@ const axiosPublic = useAxiosPublic();
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     currentUser: null as IUser | null,
-    userLoading: false as boolean,
+    isUserLoading: false as boolean,
   }),
 
   actions: {
     async initializeUser() {
-      this.userLoading = true; // Set loading to true while checking for user
+      this.isUserLoading = true; // Set loading to true while checking for user
       const token = localStorage.getItem('student-token');
       if (token) {
         this.currentUser = jwtDecode(token);
@@ -33,14 +33,14 @@ export const useAuthStore = defineStore('auth', {
       } else {
         this.currentUser = null; // Explicitly set to null if no token is found
       }
-      this.userLoading = false; // Set loading to false after checking
+      this.isUserLoading = false; // Set loading to false after checking
     },
 
     waitUntilUserLoaded() {
       let unwatch: (() => void) | null = null;
       return new Promise<void>(resolve => {
         unwatch = watchEffect(() => {
-          if (!this.userLoading) {
+          if (!this.isUserLoading) {
             if (unwatch) unwatch();
             resolve();
           }
@@ -61,7 +61,7 @@ export const useAuthStore = defineStore('auth', {
       } catch (error) {
         console.error(error);
 
-        this.userLoading = false;
+        this.isUserLoading = false;
 
         let message: string = 'Something Went Wrong!',
           status: number = 500;
@@ -77,7 +77,7 @@ export const useAuthStore = defineStore('auth', {
     async loginUser(
       user: ICredentials,
     ): Promise<ILoginResponse | IErrorResponse> {
-      this.userLoading = true;
+      this.isUserLoading = true;
       try {
         const { data } = await axiosPublic.post<ILoginResponse>(
           '/auth/login',
@@ -89,13 +89,13 @@ export const useAuthStore = defineStore('auth', {
           this.currentUser = jwtDecode(data.accessToken);
         }
 
-        this.userLoading = false;
+        this.isUserLoading = false;
 
         return data;
       } catch (error) {
         console.error(error);
 
-        this.userLoading = false;
+        this.isUserLoading = false;
 
         let message: string = 'Something Went Wrong!',
           status: number = 500;
@@ -116,7 +116,7 @@ export const useAuthStore = defineStore('auth', {
           icon: 'warning',
           showCancelButton: true,
           background: '#000000fa',
-          color:'#fff',
+          color: '#fff',
           confirmButtonColor: '#ff0000',
           cancelButtonColor: '#2a7947',
           confirmButtonText: 'Log Out!',

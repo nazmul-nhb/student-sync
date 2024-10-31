@@ -137,7 +137,7 @@ const downloadPDF = () => {
 
 <style scoped>
 .button {
-  @apply font-semibold border rounded-lg shadow-md shadow-gray-700 px-3 py-1.5 transition-all duration-300 ease-in-out;
+  @apply font-semibold border border-gray-700/75 rounded-lg shadow-md shadow-gray-700 px-3 py-1.5 transition-all duration-300 ease-in-out;
 }
 
 .button:hover {
@@ -145,11 +145,11 @@ const downloadPDF = () => {
 }
 
 .button:focus {
-  @apply border shadow-md shadow-gray-600;
+  @apply shadow-md shadow-gray-600;
 }
 
 /* Add the click effect */
 .button:active {
-  @apply transform translate-y-1 border shadow-sm shadow-gray-400; /* Move down when pressed */
+  @apply transform translate-y-1 shadow-sm shadow-gray-500; /* Move down when pressed */
 }
 </style>
