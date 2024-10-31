@@ -19,18 +19,25 @@
           </div>
         </div>
         <!-- Password -->
-        <div class="mb-4">
+        <div class="mb-4 relative">
           <label for="password" class="block mb-1 text-gray-600"
             >Password</label
           >
           <input
             id="password"
             name="password"
-            type="password"
+            :type="isPasswordVisible ? 'text' : 'password'"
             v-model="user.password"
             @blur="validatePassword"
             class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
           />
+          <span
+            @click="togglePasswordVisibility"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          >
+            <FaEye v-if="isPasswordVisible" />
+            <FaEyeSlash v-else />
+          </span>
           <div v-if="passwordError" class="text-sm text-red-600">
             {{ passwordError }}
           </div>
@@ -51,6 +58,7 @@ import { reactive, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import type { ICredentials } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
+import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
 
 const { loginUser } = useAuthStore();
 
@@ -64,6 +72,8 @@ const user = reactive<ICredentials>({ email: '', password: '' });
 // Define error state
 const emailError = ref('');
 const passwordError = ref('');
+
+const isPasswordVisible = ref(false);
 
 // Validation functions
 const validateEmail = () => {
@@ -97,6 +107,11 @@ const isValidEmail = (email: string) => {
   return emailPattern.test(email);
 };
 
+// Toggle password visibility
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value;
+};
+
 // Handle login logic
 const handleLogin = async () => {
   validateEmail();
@@ -117,6 +132,4 @@ const handleLogin = async () => {
 };
 </script>
 
-<style scoped>
-/* Add any additional styles here if needed */
-</style>
+<style scoped></style>

@@ -37,16 +37,25 @@
         </div>
 
         <!-- Password -->
-        <div class="mb-4">
-          <label for="password" class="block mb-1 text-gray-600">Password</label>
+        <div class="mb-4 relative">
+          <label for="password" class="block mb-1 text-gray-600"
+            >Password</label
+          >
           <input
             id="password"
             name="password"
-            type="password"
+            :type="isPasswordVisible ? 'text' : 'password'"
             v-model="user.password"
             @blur="validatePassword"
             class="w-full px-3 py-2 border rounded focus:outline-none focus:ring focus:ring-indigo-200"
           />
+          <span
+            @click="togglePasswordVisibility"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+          >
+            <FaEye v-if="isPasswordVisible" />
+            <FaEyeSlash v-else />
+          </span>
           <div v-if="passwordError" class="text-sm text-red-600">
             {{ passwordError }}
           </div>
@@ -54,7 +63,9 @@
 
         <!-- Image File -->
         <div class="mb-4">
-          <label for="imageFile" class="block mb-1 text-gray-600">Profile Image</label>
+          <label for="imageFile" class="block mb-1 text-gray-600"
+            >Profile Image</label
+          >
           <input
             id="imageFile"
             name="imageFile"
@@ -85,6 +96,7 @@ import { useRouter } from 'vue-router';
 import type { IUserRegister } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { useCloudinary } from '@/hooks/useCloudinary';
+import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -104,7 +116,8 @@ const nameError = ref('');
 const emailError = ref('');
 const passwordError = ref('');
 const imageError = ref('');
-const selectedFile = ref<File | null>(null); // Holds the selected image file
+const selectedFile = ref<File | null>(null);
+const isPasswordVisible = ref(false);
 
 // Validation for name
 const validateName = () => {
@@ -132,6 +145,11 @@ const validatePassword = () => {
       : !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)
         ? 'Password must contain upper/lower case letters, a number, and a symbol'
         : '';
+};
+
+// Toggle password visibility
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value;
 };
 
 // Handle image file selection

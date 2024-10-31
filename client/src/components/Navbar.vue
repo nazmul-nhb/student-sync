@@ -12,7 +12,7 @@
         <!-- Nav Links -->
         <div class="flex items-center justify-between gap-8">
           <RouterLink
-            v-if="!userLoading"
+            v-if="!userLoading && currentUser"
             to="/"
             active-class="active-link"
             class="inactive-link"
@@ -27,7 +27,7 @@
         </div>
         <!-- Profile -->
         <div v-if="userLoading">Loading...</div>
-        <div v-else class="flex items-center gap-2">
+        <div v-else class="flex items-center gap-4">
           <span v-if="currentUser">{{ currentUser.name }}</span>
           <img
             v-if="currentUser"
@@ -36,6 +36,20 @@
             :alt="currentUser.name"
           />
           <button v-if="currentUser" @click="handleLogout">Log Out</button>
+          <RouterLink
+            v-if="!currentUser"
+            to="/login"
+            active-class="active-link"
+            class="inactive-link"
+            >Login</RouterLink
+          >
+          <RouterLink
+            v-if="!currentUser"
+            to="/register"
+            active-class="active-link"
+            class="inactive-link"
+            >Register</RouterLink
+          >
         </div>
       </div>
     </div>
@@ -68,11 +82,11 @@ const handleLogout = async () => {
 <style scoped>
 /* Styles for active link */
 .active-link {
-  @apply text-blue-500 font-bold border-b border-blue-500; /* Example active styles */
+  @apply text-blue-500 font-bold border-b border-blue-500 pb-1; /* Example active styles */
 }
 
 /* Styles for inactive link */
 .inactive-link {
-  @apply text-gray-300; /* Example inactive styles */
+  @apply text-gray-200 font-semibold pb-1; /* Example inactive styles */
 }
 </style>

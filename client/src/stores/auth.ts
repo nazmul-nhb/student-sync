@@ -115,6 +115,8 @@ export const useAuthStore = defineStore('auth', {
           text: 'Want to Log Out Now?',
           icon: 'warning',
           showCancelButton: true,
+          background: '#000000fa',
+          color:'#fff',
           confirmButtonColor: '#ff0000',
           cancelButtonColor: '#2a7947',
           confirmButtonText: 'Log Out!',
