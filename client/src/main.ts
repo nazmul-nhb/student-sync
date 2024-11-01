@@ -1,13 +1,15 @@
 import './assets/main.css';
-import { createApp } from 'vue';
-import { createPinia } from 'pinia';
+import 'vue3-toastify/dist/index.css';
+import '@vuepic/vue-datepicker/dist/main.css';
+
 import App from './App.vue';
 import router from './router';
-import 'vue3-toastify/dist/index.css';
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import { useAuthStore } from './stores/auth';
+import Notiflix from 'notiflix';
 import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify';
 import { VueQueryPlugin, QueryClient } from '@tanstack/vue-query';
-import Notiflix from 'notiflix';
-import { useAuthStore } from './stores/auth';
 
 Notiflix.Confirm.init({
   titleFontSize: '20px',
@@ -22,7 +24,7 @@ const toastOptions: ToastContainerOptions = {
   closeOnClick: true,
   hideProgressBar: true,
   transition: 'bounce',
-  position: 'top-center',
+  position: 'top-right',
   theme: 'dark',
 };
 

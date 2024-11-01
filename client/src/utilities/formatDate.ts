@@ -8,7 +8,7 @@ dayjs.extend(isYesterday);
 dayjs.extend(relativeTime);
 
 export const formatDateOnly = (date: string | Date): string => {
-  return dayjs(date).format('dddd, MMMM DD, YYYY');
+  return dayjs(date).format('ddd, MMM DD, YYYY');
 };
 
 export const formatTimeOnly = (date: string | Date): string => {
