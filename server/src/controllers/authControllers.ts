@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
-import type { ICredentials, IUserDetails } from '../types/interfaces';
+import type { NextFunction, Request, Response } from 'express';
+import type { ICredentials, IUserData } from '../types/interfaces';
 import { User } from '../models/userModel';
 import bcrypt from 'bcryptjs';
 import { accessTokenSecret } from '../utils/constants';
@@ -8,7 +8,7 @@ import { validatePassword } from '../utils/validatePass';
 
 // Create New User
 export const createUser = async (
-	req: Request<{}, {}, IUserDetails>,
+	req: Request<{}, {}, IUserData>,
 	res: Response,
 	next: NextFunction,
 ) => {
@@ -101,7 +101,7 @@ export const loginUser = async (
 		const accessToken = generateToken(
 			userWithoutPassword,
 			accessTokenSecret,
-			'1h',
+			'72h',
 		);
 
 		return res.status(200).send({
