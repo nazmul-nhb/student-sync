@@ -41,7 +41,7 @@ export interface IStudentData {
 	bloodGroup: TBloodGroup;
 	NID: string | null;
 	studentMobile: string;
-	guardianMobile: string | null;
+	guardianMobile: string | '';
 	studentEmail: string;
 	minimumEducation: {
 		roll: string | string | null;

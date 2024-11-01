@@ -81,8 +81,8 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		bloodGroup: {
 			type: String,
-			enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', null],
-			default: null,
+			enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', ''],
+			default: '',
 		},
 		NID: {
 			type: String,
@@ -94,12 +94,12 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		guardianMobile: {
 			type: String,
-			default: null,
+			default: '',
 		},
 		studentEmail: {
 			type: String,
 			required: [true, 'Student email is required'],
-			unique: true,
+			// unique: true,
 			trim: true,
 			validate: {
 				validator: (value: string) => {
@@ -136,6 +136,7 @@ export const StudentSchema = new Schema<IStudent>(
 					'Technical',
 					'Madrasah',
 					'DIBS(Dhaka)',
+					'',
 				],
 				default: null,
 			},

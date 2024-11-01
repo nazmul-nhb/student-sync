@@ -17,23 +17,12 @@ export const createStudent = async (
 		if (savedStudent?._id) {
 			return res.status(201).send({
 				success: true,
-				message: `${savedStudent.studentName} is Enrolled Successfully!`,
+				message: `Successfully Enrolled in ${savedStudent.courseName}!`,
 			});
 		} else {
 			throw new Error('Cannot Enroll New Student!');
 		}
 	} catch (error) {
-		if (error instanceof Error) {
-			console.error(error.message);
-
-			if ((error as any).code === 11000) {
-				return res.status(400).send({
-					success: false,
-					message: 'Already enrolled with this email!',
-				});
-			}
-		}
-
 		next(error);
 	}
 };
