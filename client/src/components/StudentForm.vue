@@ -449,11 +449,9 @@ const handleSubmitStudent = async (): Promise<void> => {
             title: error.message,
             text: axiosError.response.data.message,
             icon: 'error',
-            showCancelButton: true,
             background: '#000000fa',
             color: '#fff',
             confirmButtonColor: '#ff0000',
-            cancelButtonColor: '#2a7947',
           });
         } else {
           toast.error('Something went wrong!');

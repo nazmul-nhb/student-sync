@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { IStudent } from '../types/model';
+import { generateID } from '@nazmul-nhb/id-generator';
 
 export const StudentSchema = new Schema<IStudent>(
 	{
@@ -15,6 +16,16 @@ export const StudentSchema = new Schema<IStudent>(
 		courseDuration: {
 			type: String,
 			default: '6 months',
+		},
+		registrationID: {
+			type: String,
+			default: () =>
+				generateID({
+					prefix: 'rainbow',
+					caseOption: 'upper',
+					separator: '',
+					length: 4,
+				}),
 		},
 		studentName: {
 			type: String,
@@ -88,6 +99,7 @@ export const StudentSchema = new Schema<IStudent>(
 		studentEmail: {
 			type: String,
 			required: [true, 'Student email is required'],
+			unique: true,
 			trim: true,
 			validate: {
 				validator: (value: string) => {
