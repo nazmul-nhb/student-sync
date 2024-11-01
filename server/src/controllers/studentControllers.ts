@@ -3,7 +3,7 @@ import { IStudentData } from '../types/interfaces';
 import { Student } from '../models/studentModel';
 
 // Create Student Data from Form
-export const createUser = async (
+export const createStudent = async (
 	req: Request<{}, {}, IStudentData>,
 	res: Response,
 	next: NextFunction,
