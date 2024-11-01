@@ -1,3 +1,4 @@
+import type { RouteMeta } from 'vue-router';
 import type { TBloodGroup, TBoard } from './types';
 
 export interface ICredentials {
@@ -28,12 +29,19 @@ export interface IUser extends Omit<IUserRegister, 'password'> {
   __v: number;
   exp: number;
   iat: number;
-  created: Date | string;
+  role: 'user' | 'admin';
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ISignatureData {
   signature: string;
   timestamp: number;
+}
+
+export interface IRouteMeta extends RouteMeta {
+  requiresAuth?: boolean;
+  roles?: ('user' | 'admin')[];
 }
 
 export interface IStudentData {
@@ -63,7 +71,7 @@ export interface IStudentData {
   minimumEducation: {
     roll: string | string | null;
     registration: string | string | null;
-    GPA: string | null;
+    GPA: number | null;
     board: TBoard | '';
   };
 }

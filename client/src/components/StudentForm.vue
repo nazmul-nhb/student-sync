@@ -353,6 +353,8 @@ import type { IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
 import { isValidEmail } from '@/utilities/validation';
 import { formatDateOnly } from '@/utilities/formatDate';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
+import { AxiosError } from 'axios';
+import Swal from 'sweetalert2';
 
 const { currentUser } = defineProps<{ currentUser: IUser }>();
 
@@ -439,7 +441,24 @@ const handleSubmitStudent = async (): Promise<void> => {
         toast.error(data.message);
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (error instanceof AxiosError) {
+        const axiosError = error as AxiosError<IStatusResponse>;
+
+        if (axiosError.response && axiosError.response.data) {
+          Swal.fire({
+            title: error.message,
+            text: axiosError.response.data.message,
+            icon: 'error',
+            showCancelButton: true,
+            background: '#000000fa',
+            color: '#fff',
+            confirmButtonColor: '#ff0000',
+            cancelButtonColor: '#2a7947',
+          });
+        } else {
+          toast.error('Something went wrong!');
+        }
+      } else if (error instanceof Error) {
         toast.error(error.message);
       }
     }

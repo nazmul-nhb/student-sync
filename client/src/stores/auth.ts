@@ -72,6 +72,10 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    getUserRole() {
+      return this.currentUser ? this.currentUser.role : null;
+    },
+
     async loginUser(
       user: ICredentials,
     ): Promise<ILoginResponse | IErrorResponse> {

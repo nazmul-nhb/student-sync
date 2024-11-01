@@ -1,43 +1,52 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  type RouteMeta,
+  type RouteRecordRaw,
+} from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import { useAuthStore } from '@/stores/auth';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import ErrorView from '@/views/ErrorView.vue';
+import type { IRouteMeta } from '@/types/interfaces';
+
+const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
+  {
+    path: '/',
+    name: 'Home',
+    component: HomeView,
+    meta: { requiresAuth: true, roles: ['user', 'admin'] },
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: () => import('../views/AboutView.vue'),
+    meta: { requiresAuth: true, roles: ['admin'] },
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginView,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: RegisterView,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: '/:catchAll(.*)', // Catch-all route
+    name: 'Error',
+    component: ErrorView,
+    meta: { requiresAuth: false },
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'Home',
-      component: HomeView,
-      meta: { requiresAuth: true },
-    },
-    {
-      path: '/about',
-      name: 'About',
-      component: () => import('../views/AboutView.vue'),
-      meta: { requiresAuth: false },
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: LoginView,
-      // meta: { requiresAuth: false },
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: RegisterView,
-      // meta: { requiresAuth: false },
-    },
-    {
-      path: '/:catchAll(.*)', // Catch-all route
-      name: 'Error',
-      component: ErrorView,
-    },
-  ],
+  routes,
 });
 
 router.beforeEach(async (to, from, next) => {
@@ -53,6 +62,16 @@ router.beforeEach(async (to, from, next) => {
     // If not authenticated, redirect to login with the attempted path
     if (!authStore.currentUser) {
       return next({ path: '/login', query: { redirect: to.fullPath } });
+    }
+
+    // Role-based access
+    const userRole = authStore.getUserRole();
+    if (
+      to.meta.roles &&
+      Array.isArray(to.meta.roles) &&
+      !to.meta.roles.includes(userRole)
+    ) {
+      return next({ path: '/403' });
     }
   }
   // Allow navigation for authenticated users or public routes
