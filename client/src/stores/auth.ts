@@ -1,4 +1,3 @@
-// src/stores/useAuthStore.js
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
 import { watchEffect } from 'vue';
@@ -25,15 +24,14 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async initializeUser() {
-      this.isUserLoading = true; // Set loading to true while checking for user
+      this.isUserLoading = true;
       const token = localStorage.getItem('student-token');
       if (token) {
         this.currentUser = jwtDecode(token);
-        console.log(this.currentUser);
       } else {
-        this.currentUser = null; // Explicitly set to null if no token is found
+        this.currentUser = null;
       }
-      this.isUserLoading = false; // Set loading to false after checking
+      this.isUserLoading = false;
     },
 
     waitUntilUserLoaded() {

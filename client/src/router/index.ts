@@ -34,6 +34,7 @@ const router = createRouter({
     },
     {
       path: '/:catchAll(.*)', // Catch-all route
+      name: 'Error',
       component: ErrorView,
     },
   ],
@@ -41,6 +42,9 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
+
+  const title = (to.name as string) || 'Student Sync';
+  document.title = `${title} - Student Sync`;
 
   // Wait until user loading completes if the route requires authentication
   if (to.meta.requiresAuth) {
