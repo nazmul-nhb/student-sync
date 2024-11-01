@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 import { IStudentData, IUserData } from './interfaces';
 
 export interface IUser extends IUserData {
-	created: Date;
+	role: 'user' | 'admin';
 }
 
 export interface IUser extends Document {}

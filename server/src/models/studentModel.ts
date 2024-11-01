@@ -5,8 +5,8 @@ export const StudentSchema = new Schema<IStudent>(
 	{
 		courseName: {
 			type: String,
-			required: [true, 'Course name is required'],
 			trim: true,
+			required: [true, 'Course name is required'],
 		},
 		trainingLocation: {
 			type: String,
@@ -18,18 +18,18 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		studentName: {
 			type: String,
-			required: [true, 'Student name is required'],
 			trim: true,
+			required: [true, 'Student name is required'],
 		},
 		fatherName: {
 			type: String,
-			required: [true, 'Father’s name is required'],
 			trim: true,
+			required: [true, 'Father’s name is required'],
 		},
 		motherName: {
 			type: String,
-			required: [true, 'Mother’s name is required'],
 			trim: true,
+			required: [true, 'Mother’s name is required'],
 		},
 		dateOfBirth: {
 			type: Date,
@@ -47,23 +47,26 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		highestEducation: {
 			type: String,
+			trim: true,
 			default: null,
 		},
 		occupation: {
 			type: String,
+			trim: true,
 			default: null,
 		},
 		instituteName: {
 			type: String,
+			trim: true,
 			default: null,
 		},
 		address: {
-			village: { type: String, required: true },
-			ward: { type: Number, required: true },
-			union: { type: String, required: true },
-			postOffice: { type: String, required: true },
-			upazila: { type: String, required: true },
-			district: { type: String, required: true },
+			village: { type: String, trim: true, required: true },
+			ward: { type: String, trim: true, required: true },
+			union: { type: String, trim: true, required: true },
+			postOffice: { type: String, trim: true, required: true },
+			upazila: { type: String, trim: true, required: true },
+			district: { type: String, trim: true, required: true },
 		},
 		bloodGroup: {
 			type: String,
@@ -71,15 +74,15 @@ export const StudentSchema = new Schema<IStudent>(
 			default: null,
 		},
 		NID: {
-			type: Number,
+			type: String,
 			default: null,
 		},
 		studentMobile: {
-			type: Number,
+			type: String,
 			required: [true, 'Student mobile is required'],
 		},
 		guardianMobile: {
-			type: Number,
+			type: String,
 			default: null,
 		},
 		studentEmail: {
@@ -96,22 +99,14 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		minimumEducation: {
 			roll: {
-				type: Schema.Types.Mixed,
+				type: String,
+				trim: true,
 				default: null,
-				validate: {
-					validator: (value: any) =>
-						typeof value === 'string' || typeof value === 'number',
-					message: 'Roll must be either a string or a number',
-				},
 			},
 			registration: {
-				type: Schema.Types.Mixed,
+				type: String,
+				trim: true,
 				default: null,
-				validate: {
-					validator: (value: any) =>
-						typeof value === 'string' || typeof value === 'number',
-					message: 'Registration must be either a string or a number',
-				},
 			},
 			GPA: { type: Number, default: null },
 			board: {

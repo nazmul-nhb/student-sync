@@ -32,21 +32,21 @@ export interface IStudentData {
 	instituteName: string | null;
 	address: {
 		village: string;
-		ward: number;
+		ward: string;
 		union: string;
 		postOffice: string;
 		upazila: string;
 		district: string;
 	};
 	bloodGroup: TBloodGroup;
-	NID: number | null;
-	studentMobile: number;
-	guardianMobile: number | null;
+	NID: string | null;
+	studentMobile: string;
+	guardianMobile: string | null;
 	studentEmail: string;
 	minimumEducation: {
-		roll: number | string;
-		registration: number | string;
-		GPA: number;
-		board: TBoard;
-	} | null;
+		roll: string | string | null;
+		registration: string | string | null;
+		GPA: number | null;
+		board: TBoard | null;
+	};
 }
