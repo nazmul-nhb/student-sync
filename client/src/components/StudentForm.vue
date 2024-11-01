@@ -354,51 +354,16 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import type { IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
 import { formatDateOnly } from '@/utilities/formatDate';
+import { validateStudent } from '@/utilities/validation';
 import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
-import { z } from 'zod';
+import { clearReactiveForm } from '@/utilities/clearForm';
 
 // Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
 
 // Axios instance
 const axiosSecure = useAxiosSecure();
-
-// Define the Zod schema for the student object
-const studentSchema = z.object({
-  courseName: z.string().min(1, { message: 'Course name is required' }),
-  studentName: z.string().min(1, { message: 'Student name is required' }),
-  fatherName: z.string().min(1, { message: "Father's name is required" }),
-  motherName: z.string().min(1, { message: "Mother's name is required" }),
-  dateOfBirth: z.date().nullable(),
-  maritalStatus: z.string().min(1, { message: 'Provide your marital status' }),
-  gender: z.string().min(1, { message: 'Provide your marital status' }),
-  highestEducation: z.string().nullable(),
-  occupation: z.string().nullable(),
-  instituteName: z.string().nullable(),
-  address: z.object({
-    village: z.string().min(1, { message: 'Provide your village/area name' }),
-    ward: z.string().min(1, { message: 'Provide your ward number' }),
-    union: z.string().min(1, { message: 'Provide your union name' }),
-    postOffice: z.string().min(1, { message: 'Provide your post office name' }),
-    upazila: z.string().min(1, { message: 'Provide your upazila name' }),
-    district: z.string().min(1, { message: 'Provide your district name' }),
-  }),
-  bloodGroup: z.string().optional(),
-  NID: z.string().nullable(),
-  studentMobile: z.string().min(1, { message: 'Provide your mobile number' }),
-  guardianMobile: z.string().optional(),
-  studentEmail: z
-    .string()
-    .email({ message: 'Enter a valid email address' })
-    .min(1, { message: 'Provide your email address' }),
-  minimumEducation: z.object({
-    roll: z.string().nullable(),
-    registration: z.string().nullable(),
-    GPA: z.number().nullable(),
-    board: z.string().optional(),
-  }),
-});
 
 // Define reactive student data
 const student = reactive<IStudentData>({
@@ -434,7 +399,7 @@ const student = reactive<IStudentData>({
 });
 
 // Function to set a nested property given its path, ensure it's numeric, and allow user-entered leading 0
-function handleNumericInput(path: string) {
+const handleNumericInput = (path: string) => {
   // Split the path into keys to access the nested property
   const keys = path.split('.');
   let obj: any = student;
@@ -455,16 +420,16 @@ function handleNumericInput(path: string) {
 
   // Set the sanitized input back to the field
   obj[lastKey] = input;
-}
+};
 
 // Handle form submission
 const handleSubmitStudent = async (): Promise<void> => {
   // Validate the student data using Zod
-  const validationResult = studentSchema.safeParse(student);
+  const result = validateStudent.safeParse(student);
 
-  if (!validationResult.success) {
+  if (!result.success) {
     // Display each validation error as a toast notification
-    validationResult.error.errors.forEach(error => {
+    result.error.errors.forEach(error => {
       toast.error(error.message);
       console.log(error);
     });
@@ -480,6 +445,7 @@ const handleSubmitStudent = async (): Promise<void> => {
 
     if (data.success) {
       toast.success(data.message);
+      clearReactiveForm(student);
     } else {
       toast.error(data.message);
     }
