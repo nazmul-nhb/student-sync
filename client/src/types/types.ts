@@ -7,7 +7,7 @@ export type TBloodGroup =
   | 'AB-'
   | 'O+'
   | 'O-'
-  | null;
+  | '';
 
 export type TBoard =
   | 'Barisal'
@@ -21,4 +21,5 @@ export type TBoard =
   | 'Sylhet'
   | 'Technical'
   | 'Madrasah'
-  | 'DIBS(Dhaka)';
+  | 'DIBS(Dhaka)'
+  | '';

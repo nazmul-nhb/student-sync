@@ -25,7 +25,6 @@
               name="studentName"
               type="text"
               v-model="student.studentName"
-              @blur="validateStudentName"
               placeholder="Enter student's name"
               class="input"
             />
@@ -37,7 +36,7 @@
               <VueDatePicker
                 placeholder="Select date of birth"
                 :enable-time-picker="false"
-                :format="formatDateOnly"
+                :preview-format="formatDateOnly"
                 v-model="student.dateOfBirth"
               />
             </div>
@@ -190,8 +189,9 @@
               class="input"
             />
             <input
-              type="number"
+              type="text"
               v-model="student.address.ward"
+              @input="handleNumericInput('address.ward')"
               placeholder="Ward"
               class="input"
             />
@@ -248,8 +248,9 @@
             <label for="NID" class="label">Enter student's NID</label>
             <input
               id="NID"
-              type="number"
+              type="text"
               v-model="student.NID"
+              @input="handleNumericInput('NID')"
               placeholder="Enter NID"
               class="input"
             />
@@ -261,8 +262,9 @@
           <label for="studentMobile" class="label">Student Mobile</label>
           <input
             id="studentMobile"
-            type="number"
+            type="text"
             v-model="student.studentMobile"
+            @input="handleNumericInput('studentMobile')"
             placeholder="Enter student mobile number"
             class="input"
           />
@@ -274,8 +276,9 @@
             <label for="guardianMobile" class="label">Guardian Mobile</label>
             <input
               id="guardianMobile"
-              type="number"
+              type="text"
               v-model="student.guardianMobile"
+              @input="handleNumericInput('guardianMobile')"
               placeholder="Enter guardian mobile number"
               class="input"
             />
@@ -290,7 +293,6 @@
               id="studentEmail"
               type="email"
               v-model="student.studentEmail"
-              @blur="validateStudentEmail"
               placeholder="Enter student's email"
               class="input"
             />
@@ -302,13 +304,13 @@
           <label for="minimumEducation" class="label">JSC/SS/Equivalent</label>
           <div class="group-inputs">
             <input
-              type="number"
+              type="text"
               v-model="student.minimumEducation.roll"
               placeholder="Roll Number"
               class="input"
             />
             <input
-              type="number"
+              type="text"
               v-model="student.minimumEducation.registration"
               placeholder="Registration Number"
               class="input"
@@ -350,14 +352,55 @@ import { reactive, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import type { IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
-import { isValidEmail } from '@/utilities/validation';
-import { formatDateOnly } from '@/utilities/formatDate';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
+import { formatDateOnly } from '@/utilities/formatDate';
 import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
+import { z } from 'zod';
 
+// Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
 
+// Axios instance
+const axiosSecure = useAxiosSecure();
+
+// Define the Zod schema for the student object
+const studentSchema = z.object({
+  courseName: z.string().min(1, { message: 'Course name is required' }),
+  studentName: z.string().min(1, { message: 'Student name is required' }),
+  fatherName: z.string().min(1, { message: "Father's name is required" }),
+  motherName: z.string().min(1, { message: "Mother's name is required" }),
+  dateOfBirth: z.date().nullable(),
+  maritalStatus: z.string().min(1, { message: 'Provide your marital status' }),
+  gender: z.string().min(1, { message: 'Provide your marital status' }),
+  highestEducation: z.string().nullable(),
+  occupation: z.string().nullable(),
+  instituteName: z.string().nullable(),
+  address: z.object({
+    village: z.string().min(1, { message: 'Provide your village/area name' }),
+    ward: z.string().min(1, { message: 'Provide your ward number' }),
+    union: z.string().min(1, { message: 'Provide your union name' }),
+    postOffice: z.string().min(1, { message: 'Provide your post office name' }),
+    upazila: z.string().min(1, { message: 'Provide your upazila name' }),
+    district: z.string().min(1, { message: 'Provide your district name' }),
+  }),
+  bloodGroup: z.string().optional(),
+  NID: z.string().nullable(),
+  studentMobile: z.string().min(1, { message: 'Provide your mobile number' }),
+  guardianMobile: z.string().optional(),
+  studentEmail: z
+    .string()
+    .email({ message: 'Enter a valid email address' })
+    .min(1, { message: 'Provide your email address' }),
+  minimumEducation: z.object({
+    roll: z.string().nullable(),
+    registration: z.string().nullable(),
+    GPA: z.number().nullable(),
+    board: z.string().optional(),
+  }),
+});
+
+// Define reactive student data
 const student = reactive<IStudentData>({
   courseName: '',
   studentName: currentUser.name,
@@ -371,7 +414,7 @@ const student = reactive<IStudentData>({
   instituteName: null,
   address: {
     village: '',
-    ward: null,
+    ward: '',
     union: '',
     postOffice: '',
     upazila: '',
@@ -379,8 +422,8 @@ const student = reactive<IStudentData>({
   },
   bloodGroup: '',
   NID: null,
-  studentMobile: null,
-  guardianMobile: null,
+  studentMobile: '',
+  guardianMobile: '',
   studentEmail: currentUser.email,
   minimumEducation: {
     roll: null,
@@ -390,75 +433,73 @@ const student = reactive<IStudentData>({
   },
 });
 
-// Define validation error states
-const studentNameError = ref('');
-const studentEmailError = ref('');
+// Function to set a nested property given its path, ensure it's numeric, and allow user-entered leading 0
+function handleNumericInput(path: string) {
+  // Split the path into keys to access the nested property
+  const keys = path.split('.');
+  let obj: any = student;
 
-const axiosSecure = useAxiosSecure();
-
-// Validation for student name
-const validateStudentName = () => {
-  studentNameError.value = '';
-  const name = student.studentName.trim();
-  studentNameError.value = name ? '' : 'Student name is required';
-
-  if (studentNameError.value) {
-    toast.error(studentNameError.value);
+  // Traverse to the second-to-last key
+  for (let i = 0; i < keys.length - 1; i++) {
+    obj = obj[keys[i]];
   }
-};
 
-// Validation for student email
-const validateStudentEmail = () => {
-  studentEmailError.value = '';
-  const email = student.studentEmail.trim();
-  studentEmailError.value = !email
-    ? 'Email is required'
-    : !isValidEmail(email)
-      ? 'Enter a valid email'
-      : '';
+  // Set the last key, filtering out any non-numeric characters
+  const lastKey = keys[keys.length - 1];
 
-  if (studentEmailError.value) {
-    toast.error(studentEmailError.value);
-  }
-};
+  // Retrieve the input value for the field
+  let input = obj[lastKey];
 
-// Handle student registration logic
+  // Only allow numbers and retain the user-entered leading zero
+  input = input.replace(/\D/g, '');
+
+  // Set the sanitized input back to the field
+  obj[lastKey] = input;
+}
+
+// Handle form submission
 const handleSubmitStudent = async (): Promise<void> => {
-  validateStudentName();
-  validateStudentEmail();
+  // Validate the student data using Zod
+  const validationResult = studentSchema.safeParse(student);
 
-  // Only proceed if there are no errors
-  if (!studentNameError.value && !studentEmailError.value) {
-    try {
-      const { data } = await axiosSecure.post<IStatusResponse>(
-        '/student/register',
-        student,
-      );
+  if (!validationResult.success) {
+    // Display each validation error as a toast notification
+    validationResult.error.errors.forEach(error => {
+      toast.error(error.message);
+      console.log(error);
+    });
+    return;
+  }
 
-      if (data.success) {
-        toast.success(data.message);
+  // If validation succeeds, proceed with form submission
+  try {
+    const { data } = await axiosSecure.post<IStatusResponse>(
+      '/student/register',
+      student,
+    );
+
+    if (data.success) {
+      toast.success(data.message);
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const axiosError = error as AxiosError<IStatusResponse>;
+      if (axiosError.response && axiosError.response.data) {
+        Swal.fire({
+          title: error.message,
+          text: axiosError.response.data.message,
+          icon: 'error',
+          background: '#000000fa',
+          color: '#fff',
+          confirmButtonColor: '#ff0000',
+        });
       } else {
-        toast.error(data.message);
+        toast.error('Something went wrong!');
       }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const axiosError = error as AxiosError<IStatusResponse>;
-
-        if (axiosError.response && axiosError.response.data) {
-          Swal.fire({
-            title: error.message,
-            text: axiosError.response.data.message,
-            icon: 'error',
-            background: '#000000fa',
-            color: '#fff',
-            confirmButtonColor: '#ff0000',
-          });
-        } else {
-          toast.error('Something went wrong!');
-        }
-      } else if (error instanceof Error) {
-        toast.error(error.message);
-      }
+    } else if (error instanceof Error) {
+      toast.error(error.message);
     }
   }
 };
