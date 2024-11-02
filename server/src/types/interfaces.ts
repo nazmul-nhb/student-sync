@@ -1,3 +1,4 @@
+import type { IStudent } from './model';
 import type { TBloodGroup, TBoard } from './types';
 
 export interface IErrorObject extends Error {
@@ -67,4 +68,12 @@ export interface ILoginResponse extends IStatusResponse {
 
 export interface IRegResponse extends IStatusResponse {
 	registrationID: string;
+}
+
+export interface IStudentResponse extends IStatusResponse {
+	studentData: IStudent;
+}
+
+export interface IStudentsResponse extends IStatusResponse {
+	studentData: IStudent[];
 }

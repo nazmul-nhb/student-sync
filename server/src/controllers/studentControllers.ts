@@ -3,6 +3,8 @@ import type {
 	IStatusResponse,
 	IRegResponse,
 	IStudentData,
+	IStudentResponse,
+	IStudentsResponse,
 } from '../types/interfaces';
 import { Student } from '../models/studentModel';
 
@@ -40,9 +42,37 @@ export const createStudent = async (
 	}
 };
 
+// Get all students data
+export const getAllStudentData = async (
+	req: Request,
+	res: Response<IStatusResponse | IStudentsResponse>,
+	next: NextFunction,
+) => {
+	try {
+		const studentData = await Student.find({});
+
+		return res.status(200).send({
+			success: true,
+			message: `${studentData.length} Student's Data`,
+			studentData,
+		});
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error(error.message);
+
+			return res.status(400).send({
+				success: false,
+				message: error.message,
+			});
+		}
+		next(error);
+	}
+};
+
+// Get a single student dat
 export const getStudentData = async (
-	req: Request<{ registrationID: string }, { email: string }, {}>,
-	res: Response,
+	req: Request<{ registrationID: string }>,
+	res: Response<IStatusResponse | IStudentResponse>,
 	next: NextFunction,
 ) => {
 	try {
