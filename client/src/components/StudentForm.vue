@@ -354,7 +354,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import type { IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
 import { formatDateOnly } from '@/utilities/formatDate';
-import { validateStudent } from '@/utilities/validation';
+import { validateStudentSchema } from '@/utilities/validation';
 import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { clearReactiveForm } from '@/utilities/clearForm';
@@ -425,7 +425,7 @@ const handleNumericInput = (path: string) => {
 // Handle form submission
 const handleSubmitStudent = async (): Promise<void> => {
   // Validate the student data using Zod
-  const result = validateStudent.safeParse(student);
+  const result = validateStudentSchema.safeParse(student);
 
   if (!result.success) {
     // Display each validation error as a toast notification

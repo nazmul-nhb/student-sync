@@ -12,7 +12,6 @@
             name="name"
             type="text"
             v-model="user.name"
-            @blur="validateName"
             placeholder="Enter your name"
             class="input"
           />
@@ -27,7 +26,6 @@
             type="email"
             placeholder="Enter your email"
             v-model="user.email"
-            @blur="validateEmail"
             class="input"
           />
         </div>
@@ -41,7 +39,6 @@
             placeholder="Create your password"
             :type="isPasswordVisible ? 'text' : 'password'"
             v-model="user.password"
-            @blur="validatePassword"
             class="input"
           />
           <span
@@ -61,7 +58,7 @@
             name="imageFile"
             type="file"
             placeholder="Choose your profile picture"
-            @change="handleImageUpload"
+            @change="handleImageChange"
             accept="image/png, image/jpeg"
             class="input"
           />
@@ -84,7 +81,11 @@ import { FaImage } from 'vue3-icons/fa6';
 import { RiLockPasswordFill } from 'vue3-icons/ri';
 import { SiMaildotru } from 'vue3-icons/si';
 import { toast } from 'vue3-toastify';
-import { isValidEmail, isValidPassword } from '@/utilities/validation';
+import {
+  isValidImageType,
+  validateRegistrationSchema,
+} from '@/utilities/validation';
+import Swal from 'sweetalert2';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -99,57 +100,9 @@ const user = reactive<IUserRegister>({
   image: '',
 });
 
-// Define error states
-const nameError = ref('');
-const emailError = ref('');
-const passwordError = ref('');
 const imageError = ref('');
 const selectedFile = ref<File | null>(null);
 const isPasswordVisible = ref(false);
-
-// Validation for name
-const validateName = () => {
-  nameError.value = '';
-  const name = user.name.trim();
-  nameError.value = name ? '' : 'Name is required';
-
-  if (nameError.value) {
-    toast.error(nameError.value);
-  }
-};
-
-// Validation for email
-const validateEmail = () => {
-  emailError.value = '';
-  const email = user.email.trim();
-  emailError.value = !email
-    ? 'Email is required'
-    : !isValidEmail(email)
-      ? 'Enter a valid email'
-      : '';
-
-  if (emailError.value) {
-    toast.error(emailError.value);
-  }
-};
-
-// Validation for password
-const validatePassword = () => {
-  passwordError.value = '';
-
-  const password = user.password;
-  passwordError.value = !password
-    ? 'Password is required'
-    : password.length < 8
-      ? 'Password must be at least 8 characters long'
-      : !isValidPassword(password)
-        ? 'Password must contain at least one upper and lower case letters, a number, and a symbol'
-        : '';
-
-  if (passwordError.value) {
-    toast.error(passwordError.value);
-  }
-};
 
 // Toggle password visibility
 const togglePasswordVisibility = () => {
@@ -157,22 +110,23 @@ const togglePasswordVisibility = () => {
 };
 
 // Handle image file selection
-const handleImageUpload = (event: Event) => {
+const handleImageChange = (event: Event) => {
   imageError.value = '';
 
   const files = (event.target as HTMLInputElement).files;
   if (files && files[0]) {
     const file = files[0];
-    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+
+    if (isValidImageType(file)) {
       selectedFile.value = file;
-      imageError.value = ''; // Clear error if file type is valid
+      imageError.value = '';
     } else {
       imageError.value = 'Only JPG and PNG files are allowed';
-      selectedFile.value = null; // Reset selected file
+      selectedFile.value = null;
     }
   } else {
-    imageError.value = 'Image is required'; // Set error if no file is selected
-    selectedFile.value = null; // Reset selected file
+    imageError.value = 'Image is required';
+    selectedFile.value = null;
   }
 
   if (imageError.value) {
@@ -182,43 +136,71 @@ const handleImageUpload = (event: Event) => {
 
 // Handle registration logic
 const handleRegister = async () => {
-  validateName();
-  validateEmail();
-  validatePassword();
+  const result = validateRegistrationSchema.safeParse(user);
 
-  // Check if an image file is selected
-  if (!selectedFile.value) {
-    imageError.value = 'Image is required';
-  } else {
-    imageError.value = ''; // Clear image error if file is present
+  if (!result.success) {
+    // Display validation errors
+    result.error.errors.forEach(error => {
+      toast.error(error.message);
+    });
+    return;
   }
 
-  if (imageError.value) {
-    return toast.error(imageError.value);
+  // Check if the image file is selected
+  if (!selectedFile.value) {
+    imageError.value = 'Image is required';
+    toast.error(imageError.value);
+    return;
+  } else {
+    imageError.value = '';
   }
 
   // Only proceed if there are no errors
-  if (
-    !nameError.value &&
-    !emailError.value &&
-    !passwordError.value &&
-    !imageError.value
-  ) {
-    try {
-      // Upload the selected image file if available
-      if (selectedFile.value) {
-        user.image = await uploadImage(selectedFile.value);
-      }
+  try {
+    // Show spinner while registering new user
+    Swal.fire({
+      title: 'Registering...',
+      text: 'Please wait for a while...',
+      allowOutsideClick: false,
+      background: '#000000fa',
+      color: '#fff',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-      const { success } = await registerUser(user);
+    // Upload the selected image file if available
+    if (selectedFile.value) {
+      user.image = await uploadImage(selectedFile.value);
+    }
 
-      if (success) {
+    const { success, message } = await registerUser(user);
+
+    Swal.hideLoading();
+    Swal.close();
+
+    if (success) {
+      toast.success(message);
+      const proceed = await Swal.fire({
+        title: 'Registered!',
+        text: message,
+        icon: 'success',
+        background: '#000000fa',
+        color: '#fff',
+        showCancelButton: true,
+        confirmButtonColor: '#2a7947',
+        cancelButtonColor: '#ff0000',
+        confirmButtonText: 'Login Now!',
+        cancelButtonText: 'Login Later!',
+      });
+
+      if (proceed.isConfirmed) {
         router.push('/login');
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      toast.error(error.message);
     }
   }
 };
