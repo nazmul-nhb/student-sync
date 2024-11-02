@@ -1,5 +1,6 @@
 import type { IMongoDuplicateKeyError } from '../types/interfaces';
 
+// Type guard for Mongoose duplicate key error
 export const isMongoDuplicateKeyError = (
 	error: unknown,
 ): error is IMongoDuplicateKeyError => {

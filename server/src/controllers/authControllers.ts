@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import { accessTokenSecret } from '../utils/constants';
 import { generateToken } from '../helpers/generateToken';
 import { validatePassword } from '../utils/validatePass';
-import { isMongoDuplicateKeyError } from '../helpers/checkErrors';
+import { isMongoDuplicateKeyError } from '../helpers/checkMongoErrors';
 
 // Create New User
 export const createUser = async (
