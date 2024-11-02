@@ -1,7 +1,7 @@
 <template>
   <Error
     heading="404 | Not Found!"
-    subHeading="The Page You Requested Not Found!"
+    subHeading="The page you requested does not exist!"
   />
 </template>
 <script setup lang="ts">

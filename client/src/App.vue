@@ -19,6 +19,7 @@ const isUserLoading = computed(() => authStore.isUserLoading);
     <Loader v-if="isUserLoading" />
     <RouterView />
   </main>
+  <VueQueryDevtools />
 </template>
 
 <style scoped></style>

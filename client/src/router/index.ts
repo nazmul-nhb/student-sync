@@ -8,8 +8,9 @@ import HomeView from '../views/HomeView.vue';
 import { useAuthStore } from '@/stores/auth';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
-import ErrorView from '@/views/ErrorView.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
 import type { IRouteMeta } from '@/types/interfaces';
+import DownloadView from '@/views/DownloadView.vue';
 
 const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
   {
@@ -37,9 +38,21 @@ const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
     meta: { requiresAuth: false },
   },
   {
+    path: '/download/:id',
+    name: 'Download',
+    component: DownloadView,
+    meta: { requiresAuth: true, roles: ['user', 'admin'] },
+  },
+  {
+    path: '/403',
+    name: 'Forbidden',
+    component: () => import('../views/ForbiddenView.vue'),
+    meta: { requiresAuth: false },
+  },
+  {
     path: '/:catchAll(.*)', // Catch-all route
     name: 'Error',
-    component: ErrorView,
+    component: NotFoundView,
     meta: { requiresAuth: false },
   },
 ];
@@ -66,6 +79,7 @@ router.beforeEach(async (to, from, next) => {
 
     // Role-based access
     const userRole = authStore.getUserRole();
+
     if (
       to.meta.roles &&
       Array.isArray(to.meta.roles) &&

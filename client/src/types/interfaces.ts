@@ -20,6 +20,10 @@ export interface ILoginResponse extends IStatusResponse {
   accessToken: string;
 }
 
+export interface IRegResponse extends IStatusResponse {
+  registrationID: string;
+}
+
 export interface IErrorResponse extends IStatusResponse {
   status: number;
 }
@@ -66,7 +70,7 @@ export interface IStudentData {
   bloodGroup: TBloodGroup;
   NID: string | null;
   studentMobile: string;
-  guardianMobile: string | "";
+  guardianMobile: string | '';
   studentEmail: string;
   minimumEducation: {
     roll: string | string | null;

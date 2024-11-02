@@ -50,7 +50,7 @@ export const validateStudentSchema = z.object({
   motherName: z.string().min(1, { message: "Mother's name is required" }),
   dateOfBirth: z.date().nullable(),
   maritalStatus: z.string().min(1, { message: 'Provide your marital status' }),
-  gender: z.string().min(1, { message: 'Provide your marital status' }),
+  gender: z.string().min(1, { message: 'Provide your gender' }),
   highestEducation: z.string().nullable(),
   occupation: z.string().nullable(),
   instituteName: z.string().nullable(),

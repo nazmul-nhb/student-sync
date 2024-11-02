@@ -351,16 +351,19 @@
 import { reactive, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import type { IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
+import type { IRegResponse, IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
 import { formatDateOnly } from '@/utilities/formatDate';
 import { validateStudentSchema } from '@/utilities/validation';
 import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { clearReactiveForm } from '@/utilities/clearForm';
+import { useRouter } from 'vue-router';
 
 // Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
+
+const router = useRouter();
 
 // Axios instance
 const axiosSecure = useAxiosSecure();
@@ -438,7 +441,7 @@ const handleSubmitStudent = async (): Promise<void> => {
 
   // If validation succeeds, proceed with form submission
   try {
-    const { data } = await axiosSecure.post<IStatusResponse>(
+    const { data } = await axiosSecure.post<IRegResponse>(
       '/student/register',
       student,
     );
@@ -446,6 +449,7 @@ const handleSubmitStudent = async (): Promise<void> => {
     if (data.success) {
       toast.success(data.message);
       clearReactiveForm(student);
+      router.push(`/download/${data.registrationID}`);
     } else {
       toast.error(data.message);
     }

@@ -35,7 +35,7 @@ const app = createApp(App);
 app.use(createPinia());
 app.use(router);
 app.use(Vue3Toastify, toastOptions);
-app.use(VueQueryPlugin, { queryClient });
+app.use(VueQueryPlugin, { queryClient, enableDevtoolsV6Plugin: true });
 
 app.mount('#app');
 
