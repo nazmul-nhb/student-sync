@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { IUserRegister } from '@/types/interfaces';
+import type { IStatusResponse, IUserRegister } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { useCloudinary } from '@/hooks/useCloudinary';
 import { FaEye, FaEyeSlash, FaUserEdit } from 'vue3-icons/fa';
@@ -86,6 +86,7 @@ import {
   validateRegistrationSchema,
 } from '@/utilities/validation';
 import Swal from 'sweetalert2';
+import { AxiosError } from 'axios';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -197,10 +198,34 @@ const handleRegister = async () => {
       if (proceed.isConfirmed) {
         router.push('/login');
       }
+    } else {
+      toast.error(message);
+      Swal.fire({
+        title: 'Registration Error!',
+        text: message || 'Something went Wrong!',
+        icon: 'error',
+        background: '#000000fa',
+        color: '#fff',
+        confirmButtonColor: '#ff0000',
+      });
     }
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof AxiosError) {
+      const axiosError = error as AxiosError<IStatusResponse>;
+      if (axiosError.response && axiosError.response.data) {
+        Swal.fire({
+          title: error.message,
+          text: axiosError.response.data.message,
+          icon: 'error',
+          background: '#000000fa',
+          color: '#fff',
+          confirmButtonColor: '#ff0000',
+        });
+      }
+    } else if (error instanceof Error) {
       toast.error(error.message);
+    } else {
+      toast.error('Something went Wrong!');
     }
   }
 };

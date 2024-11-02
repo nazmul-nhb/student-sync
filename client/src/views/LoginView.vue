@@ -11,7 +11,6 @@
             name="email"
             type="email"
             v-model="user.email"
-            @blur="validateEmail"
             placeholder="Enter your email"
             class="input"
           />
@@ -24,7 +23,6 @@
             name="password"
             :type="isPasswordVisible ? 'text' : 'password'"
             v-model="user.password"
-            @blur="validatePassword"
             placeholder="Enter your password"
             class="input"
           />
@@ -45,13 +43,15 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import type { ICredentials } from '@/types/interfaces';
+import type { ICredentials, IStatusResponse } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
 import { RiLockPasswordFill } from 'vue3-icons/ri';
 import { SiMaildotru } from 'vue3-icons/si';
 import { toast } from 'vue3-toastify';
-import { isValidEmail, isValidPassword } from '@/utilities/validation';
+import { validateLoginSchema } from '@/utilities/validation';
+import Swal from 'sweetalert2';
+import { AxiosError } from 'axios';
 
 const { loginUser } = useAuthStore();
 
@@ -62,49 +62,7 @@ const redirect = route.query.redirect || '/';
 // Define the form state
 const user = reactive<ICredentials>({ email: '', password: '' });
 
-// Define error state
-const emailError = ref('');
-const passwordError = ref('');
-
 const isPasswordVisible = ref(false);
-
-// Validation functions
-const validateEmail = () => {
-  emailError.value = '';
-
-  const email = user.email.trim();
-  if (!email) {
-    emailError.value = 'Email is required';
-  } else if (!isValidEmail(email)) {
-    emailError.value = 'Enter a valid email';
-  } else {
-    emailError.value = '';
-  }
-
-  if (emailError.value) {
-    toast.error(emailError.value);
-  }
-};
-
-const validatePassword = () => {
-  passwordError.value = '';
-
-  const password = user.password;
-  if (!password) {
-    passwordError.value = 'Password is required';
-  } else if (password.length < 8) {
-    passwordError.value = 'Password must be at least 8 characters long';
-  } else if (!isValidPassword(password)) {
-    passwordError.value =
-      'Password must contain at least one upper and lower case letters, a number, and a symbol';
-  } else {
-    passwordError.value = '';
-  }
-
-  if (passwordError.value) {
-    toast.error(passwordError.value);
-  }
-};
 
 // Toggle password visibility
 const togglePasswordVisibility = () => {
@@ -113,20 +71,65 @@ const togglePasswordVisibility = () => {
 
 // Handle login logic
 const handleLogin = async () => {
-  validateEmail();
-  validatePassword();
+  const result = validateLoginSchema.safeParse(user);
 
-  if (!emailError.value && !passwordError.value) {
-    try {
-      const { success } = await loginUser(user);
+  if (!result.success) {
+    // Display validation errors
+    result.error.errors.forEach(error => {
+      toast.error(error.message);
+    });
+    return;
+  }
 
-      if (success) {
-        router.push(redirect as string);
+  try {
+    // Show spinner while logging in the user
+    Swal.fire({
+      title: 'Logging in...',
+      text: 'Please wait for a while...',
+      allowOutsideClick: false,
+      background: '#000000fa',
+      color: '#fff',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    const { success, message } = await loginUser(user);
+
+    Swal.hideLoading();
+    Swal.close();
+
+    if (success) {
+      toast.error(message);
+      router.push(redirect as string);
+    } else {
+      toast.error(message);
+      Swal.fire({
+        title: 'Login Error!',
+        text: message || 'Something went Wrong!',
+        icon: 'error',
+        background: '#000000fa',
+        color: '#fff',
+        confirmButtonColor: '#ff0000',
+      });
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const axiosError = error as AxiosError<IStatusResponse>;
+      if (axiosError.response && axiosError.response.data) {
+        Swal.fire({
+          title: error.message,
+          text: axiosError.response.data.message,
+          icon: 'error',
+          background: '#000000fa',
+          color: '#fff',
+          confirmButtonColor: '#ff0000',
+        });
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error('Something went Wrong!');
     }
   }
 };

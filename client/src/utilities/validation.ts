@@ -1,14 +1,8 @@
 import { z } from 'zod';
 
-// Regex function for email validation
-export const isValidEmail = (email: string): boolean => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailPattern.test(email);
-};
-
 // Regex function for password validation
 export const isValidPassword = (password: string): boolean => {
-  const passwordPattern = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
+  const passwordPattern = /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*^</>#?&])/;
   return passwordPattern.test(password);
 };
 
@@ -16,7 +10,6 @@ export const isValidPassword = (password: string): boolean => {
 export const isValidImageType = (file: File): boolean => {
   return file.type === 'image/jpeg' || file.type === 'image/png';
 };
-
 
 // Zod schema for user registration form validation
 export const validateRegistrationSchema = z.object({
@@ -29,7 +22,23 @@ export const validateRegistrationSchema = z.object({
     .string()
     .min(8, { message: 'Password must be at least 8 characters' })
     .refine(value => isValidPassword(value), {
-      message: 'Password must contain at least one upper case letter, one lower case letter, one number, and one special character',
+      message:
+        'Password must contain at least one upper case letter, one lower case letter, one number, and one special character',
+    }),
+});
+
+// Zod schema for user login form validation
+export const validateLoginSchema = z.object({
+  email: z
+    .string()
+    .email({ message: 'Enter a valid email address' })
+    .min(1, { message: 'Email is required' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters' })
+    .refine(value => isValidPassword(value), {
+      message:
+        'Password must contain at least one upper case letter, one lower case letter, one number, and one special character',
     }),
 });
 

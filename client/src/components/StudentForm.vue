@@ -462,7 +462,7 @@ const handleSubmitStudent = async (): Promise<void> => {
           confirmButtonColor: '#ff0000',
         });
       } else {
-        toast.error('Something went wrong!');
+        toast.error('Something went Wrong!');
       }
     } else if (error instanceof Error) {
       toast.error(error.message);
