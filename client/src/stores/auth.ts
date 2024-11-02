@@ -115,7 +115,7 @@ export const useAuthStore = defineStore('auth', {
         const proceed = await showConfirmDialogue(
           'Are You Sure?',
           'Want to Log Out Now?',
-          'warning',
+          'question',
           'Log Out!',
           'Cancel!',
         );
