@@ -4,6 +4,11 @@ export interface IErrorObject extends Error {
 	status?: number;
 }
 
+export interface IMongoDuplicateKeyError {
+	code: number;
+	keyValue: Record<string, unknown>;
+}
+
 export interface ICredentials {
 	email: string;
 	password: string;
