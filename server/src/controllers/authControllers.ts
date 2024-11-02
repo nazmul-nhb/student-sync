@@ -43,15 +43,11 @@ export const createUser = async (
 			throw new Error('Cannot Register New User!');
 		}
 	} catch (error) {
-		if (error instanceof Error) {
-			console.error(error.message);
-
-			if (isMongoDuplicateKeyError(error)) {
-				return res.status(400).send({
-					success: false,
-					message: 'This Email is Already Registered!',
-				});
-			}
+		if (isMongoDuplicateKeyError(error)) {
+			return res.status(400).send({
+				success: false,
+				message: 'This Email is Already Registered!',
+			});
 		}
 
 		next(error);
