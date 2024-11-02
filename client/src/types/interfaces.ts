@@ -79,3 +79,21 @@ export interface IStudentData {
     board: TBoard;
   };
 }
+
+export interface IStudent extends IStudentData {
+  _id: string;
+  trainingLocation: 'Guler Mor, Natuarpara, Kazipur, Sirajganj';
+  courseDuration: '6 months';
+  registrationID: string;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+}
+
+export interface IStudentResponse extends IStatusResponse {
+	studentData: IStudent;
+}
+
+export interface IStudentsResponse extends IStatusResponse {
+	studentData: IStudent[];
+}

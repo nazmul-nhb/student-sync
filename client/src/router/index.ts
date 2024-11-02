@@ -50,8 +50,8 @@ const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
     meta: { requiresAuth: false },
   },
   {
-    path: '/:catchAll(.*)', // Catch-all route
-    name: 'Error',
+    path: '/:catchAll(.*)',
+    name: 'Not Found',
     component: NotFoundView,
     meta: { requiresAuth: false },
   },
