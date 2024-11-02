@@ -364,7 +364,7 @@ import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { clearReactiveForm } from '@/utilities/clearForm';
 import { useRouter } from 'vue-router';
-import { confirmationDialogue } from '@/utilities/confirmation';
+import { confirmationDialogue, showStaticAlert } from '@/utilities/sweetAlert';
 
 // Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
@@ -478,20 +478,22 @@ const handleSubmitStudent = async (): Promise<void> => {
         }
       } else {
         toast.error(data.message);
+        showStaticAlert(
+          'Cannot SUbmit Form!',
+          data.message || 'Something went Wrong!',
+          'error',
+        );
       }
     }
   } catch (error) {
     if (error instanceof AxiosError) {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
-        Swal.fire({
-          title: error.message,
-          text: axiosError.response.data.message,
-          icon: 'error',
-          background: '#000000fa',
-          color: '#fff',
-          confirmButtonColor: '#ff0000',
-        });
+        showStaticAlert(
+          error.message,
+          axiosError.response.data.message,
+          'error',
+        );
       } else {
         toast.error('Something went Wrong!');
       }

@@ -1,4 +1,3 @@
-import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
 import { watchEffect } from 'vue';
 import { defineStore } from 'pinia';
@@ -13,6 +12,7 @@ import type {
   IUserRegister,
   IUser,
 } from '@/types/interfaces';
+import { confirmationDialogue } from '@/utilities/sweetAlert';
 
 const axiosPublic = useAxiosPublic();
 
@@ -112,19 +112,15 @@ export const useAuthStore = defineStore('auth', {
 
     async logOut(): Promise<boolean> {
       if (this.currentUser) {
-        const result = await Swal.fire({
-          title: 'Are You Sure?',
-          text: 'Want to Log Out Now?',
-          icon: 'warning',
-          showCancelButton: true,
-          background: '#000000fa',
-          color: '#fff',
-          confirmButtonColor: '#ff0000',
-          cancelButtonColor: '#2a7947',
-          confirmButtonText: 'Log Out!',
-        });
+        const proceed = await confirmationDialogue(
+          'Are You Sure?',
+          'Want to Log Out Now?',
+          'warning',
+          'Log Out!',
+          'Cancel!',
+        );
 
-        if (result.isConfirmed) {
+        if (proceed.isConfirmed) {
           localStorage.removeItem('student-token');
           this.currentUser = null; // Clear the current user
           toast.success('Logged Out!');

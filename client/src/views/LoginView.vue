@@ -52,6 +52,7 @@ import { toast } from 'vue3-toastify';
 import { validateLoginSchema } from '@/utilities/validation';
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
+import { showStaticAlert } from '@/utilities/sweetAlert';
 
 const { loginUser } = useAuthStore();
 
@@ -104,27 +105,21 @@ const handleLogin = async () => {
       router.push(redirect as string);
     } else {
       toast.error(message);
-      Swal.fire({
-        title: 'Login Error!',
-        text: message || 'Something went Wrong!',
-        icon: 'error',
-        background: '#000000fa',
-        color: '#fff',
-        confirmButtonColor: '#ff0000',
-      });
+      showStaticAlert(
+        'Login Error!',
+        message || 'Something went Wrong!',
+        'error',
+      );
     }
   } catch (error) {
     if (error instanceof AxiosError) {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
-        Swal.fire({
-          title: error.message,
-          text: axiosError.response.data.message,
-          icon: 'error',
-          background: '#000000fa',
-          color: '#fff',
-          confirmButtonColor: '#ff0000',
-        });
+        showStaticAlert(
+          error.message,
+          axiosError.response.data.message,
+          'error',
+        );
       }
     } else if (error instanceof Error) {
       toast.error(error.message);

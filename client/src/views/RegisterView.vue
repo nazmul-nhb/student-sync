@@ -87,7 +87,7 @@ import {
 } from '@/utilities/validation';
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
-import { confirmationDialogue } from '@/utilities/confirmation';
+import { confirmationDialogue, showStaticAlert } from '@/utilities/sweetAlert';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -199,27 +199,21 @@ const handleRegister = async () => {
       }
     } else {
       toast.error(message);
-      Swal.fire({
-        title: 'Registration Error!',
-        text: message || 'Something went Wrong!',
-        icon: 'error',
-        background: '#000000fa',
-        color: '#fff',
-        confirmButtonColor: '#ff0000',
-      });
+      showStaticAlert(
+        'Registration Error!',
+        message || 'Something went Wrong!',
+        'error',
+      );
     }
   } catch (error) {
     if (error instanceof AxiosError) {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
-        Swal.fire({
-          title: error.message,
-          text: axiosError.response.data.message,
-          icon: 'error',
-          background: '#000000fa',
-          color: '#fff',
-          confirmButtonColor: '#ff0000',
-        });
+        showStaticAlert(
+          error.message,
+          axiosError.response.data.message,
+          'error',
+        );
       }
     } else if (error instanceof Error) {
       toast.error(error.message);
