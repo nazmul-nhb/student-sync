@@ -87,7 +87,11 @@ import {
 } from '@/utilities/validation';
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
-import { confirmationDialogue, showLoadingSpinnerAlert, showStaticAlert } from '@/utilities/sweetAlert';
+import {
+  showConfirmDialogue,
+  showLoadingSpinnerAlert,
+  showStaticAlert,
+} from '@/utilities/sweetAlert';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -177,7 +181,7 @@ const handleRegister = async () => {
       toast.success(message);
 
       // Ask permission to go to the login page
-      const proceed = await confirmationDialogue(
+      const proceed = await showConfirmDialogue(
         'Registered',
         message,
         'success',

@@ -1,16 +1,15 @@
-import {
-  createRouter,
-  createWebHistory,
-  type RouteMeta,
-  type RouteRecordRaw,
-} from 'vue-router';
-import HomeView from '../views/HomeView.vue';
 import { useAuthStore } from '@/stores/auth';
+import HomeView from '../views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
-import type { IRouteMeta } from '@/types/interfaces';
 import DownloadView from '@/views/DownloadView.vue';
+import type { IRouteMeta } from '@/types/interfaces';
+import {
+  createRouter,
+  createWebHistory,
+  type RouteRecordRaw,
+} from 'vue-router';
 
 const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
   {

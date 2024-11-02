@@ -191,7 +191,7 @@
             <input
               type="text"
               v-model="student.address.ward"
-              @input="handleNumericInput('address.ward')"
+              @input="handleNumericInput('address.ward', student)"
               placeholder="Ward"
               class="input"
             />
@@ -250,7 +250,7 @@
               id="NID"
               type="text"
               v-model="student.NID"
-              @input="handleNumericInput('NID')"
+              @input="handleNumericInput('NID', student)"
               placeholder="Enter NID"
               class="input"
             />
@@ -264,7 +264,7 @@
             id="studentMobile"
             type="text"
             v-model="student.studentMobile"
-            @input="handleNumericInput('studentMobile')"
+            @input="handleNumericInput('studentMobile', student)"
             placeholder="Enter student mobile number"
             class="input"
           />
@@ -278,7 +278,7 @@
               id="guardianMobile"
               type="text"
               v-model="student.guardianMobile"
-              @input="handleNumericInput('guardianMobile')"
+              @input="handleNumericInput('guardianMobile', student)"
               placeholder="Enter guardian mobile number"
               class="input"
             />
@@ -348,7 +348,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive } from 'vue';
 import { toast } from 'vue3-toastify';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import type {
@@ -359,12 +359,14 @@ import type {
 } from '@/types/interfaces';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
 import { formatDateOnly } from '@/utilities/formatDate';
-import { validateStudentSchema } from '@/utilities/validation';
+import {
+  handleNumericInput,
+  validateStudentSchema,
+} from '@/utilities/validation';
 import { AxiosError } from 'axios';
-import Swal from 'sweetalert2';
 import { clearReactiveForm } from '@/utilities/clearForm';
 import { useRouter } from 'vue-router';
-import { confirmationDialogue, showStaticAlert } from '@/utilities/sweetAlert';
+import { showConfirmDialogue, showStaticAlert } from '@/utilities/sweetAlert';
 
 // Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
@@ -407,30 +409,6 @@ const student = reactive<IStudentData>({
   },
 });
 
-// Function to set a nested property given its path, ensure it's numeric, and allow user-entered leading 0
-const handleNumericInput = (path: string) => {
-  // Split the path into keys to access the nested property
-  const keys = path.split('.');
-  let obj: any = student;
-
-  // Traverse to the second-to-last key
-  for (let i = 0; i < keys.length - 1; i++) {
-    obj = obj[keys[i]];
-  }
-
-  // Set the last key, filtering out any non-numeric characters
-  const lastKey = keys[keys.length - 1];
-
-  // Retrieve the input value for the field
-  let input = obj[lastKey];
-
-  // Only allow numbers and retain the user-entered leading zero
-  input = input.replace(/\D/g, '');
-
-  // Set the sanitized input back to the field
-  obj[lastKey] = input;
-};
-
 // Handle form submission
 const handleSubmitStudent = async (): Promise<void> => {
   // Validate the student data using Zod
@@ -448,7 +426,7 @@ const handleSubmitStudent = async (): Promise<void> => {
   // If validation succeeds, proceed with form submission
   try {
     // Ask permission to submit form
-    const proceed = await confirmationDialogue(
+    const proceed = await showConfirmDialogue(
       'Submit Now?',
       'Do you want to submit the form now?',
       'question',
@@ -466,7 +444,7 @@ const handleSubmitStudent = async (): Promise<void> => {
         clearReactiveForm(student);
 
         // Ask permission to go to the download page
-        const proceedDownload = await confirmationDialogue(
+        const proceedDownload = await showConfirmDialogue(
           'Form Submitted',
           'Do you want to download your copy now?',
           'success',

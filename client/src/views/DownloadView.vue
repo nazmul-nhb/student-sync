@@ -30,13 +30,13 @@ const axiosSecure = useAxiosSecure();
 
 const studentData = ref<IStudentResponse['studentData'] | null>(null);
 
-const currentUser = computed(() => authStore.currentUser);
+// const currentUser = computed(() => authStore.currentUser);
 const isUserLoading = computed(() => authStore.isUserLoading);
 
 const {
   data,
   isLoading: isStudentLoading,
-  refetch,
+  // refetch,
 } = useQuery({
   queryKey: ['studentData', id],
   queryFn: async () => {

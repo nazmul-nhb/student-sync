@@ -1,8 +1,12 @@
-export const clearReactiveForm = (obj: Record<string, any>): void => {
+export const clearReactiveForm = (obj: Record<string, unknown>): void => {
   Object.keys(obj).forEach(key => {
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
-      clearReactiveForm(obj[key]);
+    const value = obj[key];
+
+    if (typeof value === 'object' && value !== null) {
+      // If the value is an object, recursively clear it
+      clearReactiveForm(value as Record<string, unknown>);
     } else {
+      // Set the value to an empty string
       obj[key] = '';
     }
   });

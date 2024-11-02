@@ -12,7 +12,7 @@ import type {
   IUserRegister,
   IUser,
 } from '@/types/interfaces';
-import { confirmationDialogue } from '@/utilities/sweetAlert';
+import { showConfirmDialogue } from '@/utilities/sweetAlert';
 
 const axiosPublic = useAxiosPublic();
 
@@ -112,7 +112,7 @@ export const useAuthStore = defineStore('auth', {
 
     async logOut(): Promise<boolean> {
       if (this.currentUser) {
-        const proceed = await confirmationDialogue(
+        const proceed = await showConfirmDialogue(
           'Are You Sure?',
           'Want to Log Out Now?',
           'warning',

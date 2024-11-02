@@ -15,7 +15,7 @@ export const showStaticAlert = (
   });
 };
 
-export const confirmationDialogue = async (
+export const showConfirmDialogue = async (
   title: string,
   message: string,
   icon: 'error' | 'info' | 'question' | 'success' | 'warning',

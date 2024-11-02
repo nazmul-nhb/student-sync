@@ -91,9 +91,9 @@ export interface IStudent extends IStudentData {
 }
 
 export interface IStudentResponse extends IStatusResponse {
-	studentData: IStudent;
+  studentData: IStudent;
 }
 
 export interface IStudentsResponse extends IStatusResponse {
-	studentData: IStudent[];
+  studentData: IStudent[];
 }

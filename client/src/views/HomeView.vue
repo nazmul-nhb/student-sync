@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import StudentForm from '@/components/StudentForm.vue';
 import { useAuthStore } from '@/stores/auth';
-import html2pdf from 'html2pdf.js';
+import html2pdf, { type Html2PdfOptions } from 'html2pdf.js';
 import { computed } from 'vue';
 import Loader from '../components/Loader.vue';
 
@@ -13,8 +13,9 @@ const downloadPDF = () => {
   // Select the HTML element you want to export as PDF
   const element = document.getElementById('pdf-section');
   const timestamp = Date.now();
+
   // Define custom options for the PDF
-  const options = {
+  const options: Html2PdfOptions = {
     margin: 0.5,
     filename: `${currentUser.value ? currentUser.value.name : 'User'}-${timestamp}.pdf`,
     html2canvas: { scale: 2, scrollX: 0, scrollY: 0, useCORS: true },
@@ -22,7 +23,9 @@ const downloadPDF = () => {
   };
 
   // Use html2pdf to generate the PDF
-  html2pdf().set(options).from(element).save();
+  if (element) {
+    html2pdf().set(options).from(element).save();
+  }
 };
 </script>
 

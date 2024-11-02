@@ -11,7 +11,7 @@ export const useAxiosSecure = () => {
   const { logOut } = useAuthStore();
 
   // Add request interceptor to include authorization headers
-  const requestInterceptor = axiosSecure.interceptors.request.use(
+  axiosSecure.interceptors.request.use(
     config => {
       const token = localStorage.getItem('student-token');
       if (!token) {
@@ -32,7 +32,7 @@ export const useAxiosSecure = () => {
   );
 
   // Add response interceptor for handling 401/403 errors
-  const responseInterceptor = axiosSecure.interceptors.response.use(
+  axiosSecure.interceptors.response.use(
     response => response,
     async error => {
       const status = error.response ? error.response.status : null;

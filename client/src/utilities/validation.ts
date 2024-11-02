@@ -6,6 +6,40 @@ export const isValidPassword = (password: string): boolean => {
   return passwordPattern.test(password);
 };
 
+// Function to set a nested property given its path, ensure it's numeric, and allow user-entered leading 0
+export const handleNumericInput = <T extends Record<string, unknown>>(
+  path: string,
+  object: T,
+) => {
+  // Split the path into keys to access the nested property
+  const keys = path.split('.');
+  let obj: Record<string, unknown> | undefined = object;
+
+  // Traverse to the second-to-last key
+  for (let i = 0; i < keys.length - 1; i++) {
+    if (obj && typeof obj === 'object' && keys[i] in obj) {
+      obj = obj[keys[i]] as Record<string, unknown>;
+    } else {
+      // Exit if the key does not exist in the object
+      return;
+    }
+  }
+
+  // Set the last key, filtering out any non-numeric characters
+  const lastKey = keys[keys.length - 1];
+
+  // Retrieve the input value for the field
+  let input = obj && lastKey in obj ? obj[lastKey] : undefined;
+
+  // Only allow numbers and retain the user-entered leading zero
+  if (typeof input === 'string') {
+    input = input.replace(/\D/g, '');
+    obj[lastKey] = input;
+  } else if (typeof input === 'number') {
+    obj[lastKey] = input;
+  }
+};
+
 // Check for image types
 export const isValidImageType = (file: File): boolean => {
   return file.type === 'image/jpeg' || file.type === 'image/png';
