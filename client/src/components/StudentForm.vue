@@ -351,7 +351,12 @@
 import { reactive, ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import type { IRegResponse, IStatusResponse, IStudentData, IUser } from '@/types/interfaces';
+import type {
+  IRegResponse,
+  IStatusResponse,
+  IStudentData,
+  IUser,
+} from '@/types/interfaces';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
 import { formatDateOnly } from '@/utilities/formatDate';
 import { validateStudentSchema } from '@/utilities/validation';
@@ -359,6 +364,7 @@ import { AxiosError } from 'axios';
 import Swal from 'sweetalert2';
 import { clearReactiveForm } from '@/utilities/clearForm';
 import { useRouter } from 'vue-router';
+import { confirmationDialogue } from '@/utilities/confirmation';
 
 // Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
@@ -441,17 +447,38 @@ const handleSubmitStudent = async (): Promise<void> => {
 
   // If validation succeeds, proceed with form submission
   try {
-    const { data } = await axiosSecure.post<IRegResponse>(
-      '/student/register',
-      student,
+    // Ask permission to submit form
+    const proceed = await confirmationDialogue(
+      'Submit Now?',
+      'Do you want to submit the form now?',
+      'question',
     );
 
-    if (data.success) {
-      toast.success(data.message);
-      clearReactiveForm(student);
-      router.push(`/download/${data.registrationID}`);
-    } else {
-      toast.error(data.message);
+    // Proceed to submit
+    if (proceed.isConfirmed) {
+      const { data } = await axiosSecure.post<IRegResponse>(
+        '/student/register',
+        student,
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        clearReactiveForm(student);
+
+        // Ask permission to go to the download page
+        const proceedDownload = await confirmationDialogue(
+          'Form Submitted',
+          'Do you want to download your copy now?',
+          'success',
+        );
+
+        // Proceed to the download page
+        if (proceedDownload.isConfirmed) {
+          router.push(`/download/${data.registrationID}`);
+        }
+      } else {
+        toast.error(data.message);
+      }
     }
   } catch (error) {
     if (error instanceof AxiosError) {

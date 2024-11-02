@@ -87,6 +87,7 @@ import {
 } from '@/utilities/validation';
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
+import { confirmationDialogue } from '@/utilities/confirmation';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -182,19 +183,17 @@ const handleRegister = async () => {
 
     if (success) {
       toast.success(message);
-      const proceed = await Swal.fire({
-        title: 'Registered!',
-        text: message,
-        icon: 'success',
-        background: '#000000fa',
-        color: '#fff',
-        showCancelButton: true,
-        confirmButtonColor: '#2a7947',
-        cancelButtonColor: '#ff0000',
-        confirmButtonText: 'Login Now!',
-        cancelButtonText: 'Login Later!',
-      });
 
+      // Ask permission to go to the login page
+      const proceed = await confirmationDialogue(
+        'Registered',
+        message,
+        'success',
+        'Login Now!',
+        'Login Later!',
+      );
+
+      // Proceed to the login page
       if (proceed.isConfirmed) {
         router.push('/login');
       }
