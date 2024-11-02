@@ -87,7 +87,7 @@ import {
 } from '@/utilities/validation';
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
-import { confirmationDialogue, showStaticAlert } from '@/utilities/sweetAlert';
+import { confirmationDialogue, showLoadingSpinnerAlert, showStaticAlert } from '@/utilities/sweetAlert';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
@@ -160,16 +160,7 @@ const handleRegister = async () => {
   // Only proceed if there are no errors
   try {
     // Show spinner while registering new user
-    Swal.fire({
-      title: 'Registering...',
-      text: 'Please wait for a while...',
-      allowOutsideClick: false,
-      background: '#000000fa',
-      color: '#fff',
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    showLoadingSpinnerAlert('Registering...');
 
     // Upload the selected image file if available
     if (selectedFile.value) {
@@ -178,6 +169,7 @@ const handleRegister = async () => {
 
     const { success, message } = await registerUser(user);
 
+    // Hide and close loading spinner
     Swal.hideLoading();
     Swal.close();
 

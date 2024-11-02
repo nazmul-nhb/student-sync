@@ -35,3 +35,16 @@ export const confirmationDialogue = async (
     cancelButtonText,
   });
 };
+
+export const showLoadingSpinnerAlert = (title: string) => {
+  return Swal.fire({
+    title,
+    text: 'Please wait for a while...',
+    allowOutsideClick: false,
+    background: '#000000fa',
+    color: '#fff',
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+};

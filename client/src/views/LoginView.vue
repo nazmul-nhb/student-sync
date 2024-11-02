@@ -52,7 +52,10 @@ import { toast } from 'vue3-toastify';
 import { validateLoginSchema } from '@/utilities/validation';
 import Swal from 'sweetalert2';
 import { AxiosError } from 'axios';
-import { showStaticAlert } from '@/utilities/sweetAlert';
+import {
+  showLoadingSpinnerAlert,
+  showStaticAlert,
+} from '@/utilities/sweetAlert';
 
 const { loginUser } = useAuthStore();
 
@@ -84,24 +87,15 @@ const handleLogin = async () => {
 
   try {
     // Show spinner while logging in the user
-    Swal.fire({
-      title: 'Logging in...',
-      text: 'Please wait for a while...',
-      allowOutsideClick: false,
-      background: '#000000fa',
-      color: '#fff',
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
+    showLoadingSpinnerAlert('Logging in...');
 
     const { success, message } = await loginUser(user);
 
+    // Hide and close loading spinner
     Swal.hideLoading();
     Swal.close();
 
     if (success) {
-      toast.error(message);
       router.push(redirect as string);
     } else {
       toast.error(message);

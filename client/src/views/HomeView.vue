@@ -3,9 +3,11 @@ import StudentForm from '@/components/StudentForm.vue';
 import { useAuthStore } from '@/stores/auth';
 import html2pdf from 'html2pdf.js';
 import { computed } from 'vue';
+import Loader from '../components/Loader.vue';
 
 const authStore = useAuthStore();
 const currentUser = computed(() => authStore.currentUser);
+const isUserLoading = computed(() => authStore.isUserLoading);
 
 const downloadPDF = () => {
   // Select the HTML element you want to export as PDF
@@ -25,7 +27,8 @@ const downloadPDF = () => {
 </script>
 
 <template>
-  <section class="flex flex-col items-center justify-center gap-6">
+  <Loader v-if="isUserLoading" />
+  <section v-else class="flex flex-col items-center justify-center gap-6">
     <button class="button" @click="downloadPDF">Download as PDF</button>
     <div
       v-if="currentUser"
