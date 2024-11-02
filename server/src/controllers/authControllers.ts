@@ -1,5 +1,10 @@
 import type { NextFunction, Request, Response } from 'express';
-import type { ICredentials, IUserData } from '../types/interfaces';
+import type {
+	ICredentials,
+	ILoginResponse,
+	IStatusResponse,
+	IUserData,
+} from '../types/interfaces';
 import { User } from '../models/userModel';
 import bcrypt from 'bcryptjs';
 import { accessTokenSecret } from '../utils/constants';
@@ -10,7 +15,7 @@ import { isMongoDuplicateKeyError } from '../helpers/checkMongoErrors';
 // Create New User
 export const createUser = async (
 	req: Request<{}, {}, IUserData>,
-	res: Response,
+	res: Response<IStatusResponse>,
 	next: NextFunction,
 ) => {
 	try {
@@ -22,7 +27,7 @@ export const createUser = async (
 		if (!validPassword) {
 			return res.status(400).send({
 				success: false,
-				message: validationError,
+				message: validationError as string,
 			});
 		}
 
@@ -57,7 +62,7 @@ export const createUser = async (
 // Login A User
 export const loginUser = async (
 	req: Request<{}, {}, ICredentials>,
-	res: Response,
+	res: Response<IStatusResponse | ILoginResponse>,
 	next: NextFunction,
 ) => {
 	try {
@@ -69,7 +74,7 @@ export const loginUser = async (
 		if (!validPassword) {
 			return res.status(400).send({
 				success: false,
-				message: validationError,
+				message: validationError as string,
 			});
 		}
 

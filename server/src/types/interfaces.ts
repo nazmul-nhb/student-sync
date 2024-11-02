@@ -55,3 +55,16 @@ export interface IStudentData {
 		board: TBoard | null;
 	};
 }
+
+export interface IStatusResponse {
+	success: boolean;
+	message: string;
+}
+
+export interface ILoginResponse extends IStatusResponse {
+	accessToken: string;
+}
+
+export interface IRegResponse extends IStatusResponse {
+	registrationID: string;
+}
