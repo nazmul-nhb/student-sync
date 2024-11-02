@@ -214,7 +214,7 @@ const handleRegister = async () => {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
         Swal.fire({
-          title: error.message,
+          title: 'Registration Error!',
           text: axiosError.response.data.message,
           icon: 'error',
           background: '#000000fa',

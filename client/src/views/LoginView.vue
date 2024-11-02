@@ -118,7 +118,7 @@ const handleLogin = async () => {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
         Swal.fire({
-          title: error.message,
+          title: 'Login Error!',
           text: axiosError.response.data.message,
           icon: 'error',
           background: '#000000fa',
