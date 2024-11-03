@@ -7,9 +7,11 @@ export default [
     name: 'app/files-to-lint',
     files: ['**/*.{ts,mts,tsx,vue}'],
     rules: {
-      "no-unused-vars": "warn", 'vue/multi-word-component-names': ["error", {
-        "ignores": ['Error', 'Loader', 'Navbar']
-      }]
+      "no-unused-vars": "error",
+      "@typescript-eslint/no-unused-vars": "error",
+      'vue/multi-word-component-names': [
+        "error", { "ignores": ['Error', 'Loader', 'Navbar'] }
+      ]
     }
   },
 

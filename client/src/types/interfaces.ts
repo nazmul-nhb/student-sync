@@ -80,7 +80,7 @@ export interface IStudentData {
   };
 }
 
-export interface IStudent extends IStudentData {
+export interface IStudent extends Required<IStudentData> {
   _id: string;
   trainingLocation: 'Guler Mor, Natuarpara, Kazipur, Sirajganj';
   courseDuration: '6 months';
