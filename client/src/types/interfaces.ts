@@ -77,6 +77,7 @@ export interface IStudentData {
     registration: string | string | null;
     GPA: number | null;
     board: TBoard;
+    passingYear: string | null;
   };
 }
 

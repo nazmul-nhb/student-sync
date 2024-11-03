@@ -109,5 +109,6 @@ export const validateStudentSchema = z.object({
     registration: z.string().nullable(),
     GPA: z.number().nullable(),
     board: z.string().optional(),
+    passingYear: z.number().nullable(),
   }),
 });

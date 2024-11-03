@@ -257,20 +257,19 @@
           </div>
         </div>
 
-        <!-- Student Mobile -->
-        <div class="input-div">
-          <label for="studentMobile" class="label">Student Mobile</label>
-          <input
-            id="studentMobile"
-            type="text"
-            v-model="student.studentMobile"
-            @input="handleNumericInput('studentMobile', student)"
-            placeholder="Enter student mobile number"
-            class="input"
-          />
-        </div>
-
         <div class="group-inputs">
+          <!-- Student Mobile -->
+          <div class="input-div">
+            <label for="studentMobile" class="label">Student Mobile</label>
+            <input
+              id="studentMobile"
+              type="text"
+              v-model="student.studentMobile"
+              @input="handleNumericInput('studentMobile', student)"
+              placeholder="Enter student mobile number"
+              class="input"
+            />
+          </div>
           <!-- Guardian Mobile -->
           <div class="input-div">
             <label for="guardianMobile" class="label">Guardian Mobile</label>
@@ -283,20 +282,18 @@
               class="input"
             />
           </div>
+        </div>
 
-          <!-- Student Email -->
-          <div class="input-div">
-            <label for="studentEmail" class="label"
-              >Enter student's email</label
-            >
-            <input
-              id="studentEmail"
-              type="email"
-              v-model="student.studentEmail"
-              placeholder="Enter student's email"
-              class="input"
-            />
-          </div>
+        <!-- Student Email -->
+        <div class="input-div">
+          <label for="studentEmail" class="label">Enter student's email</label>
+          <input
+            id="studentEmail"
+            type="email"
+            v-model="student.studentEmail"
+            placeholder="Enter student's email"
+            class="input"
+          />
         </div>
 
         <!-- JSC/SS/Equivalent Education -->
@@ -338,6 +335,14 @@
               <option value="Madrasah">Madrasah</option>
               <option value="DIBS(Dhaka)">DIBS(Dhaka)</option>
             </select>
+            <input
+              id="passingYear"
+              type="text"
+              v-model="student.minimumEducation.passingYear"
+              @input="handleNumericInput('minimumEducation.passingYear', student)"
+              placeholder="Passing year"
+              class="input"
+            />
           </div>
         </div>
 
@@ -406,6 +411,7 @@ const student = reactive<IStudentData>({
     registration: null,
     GPA: null,
     board: '',
+    passingYear: null,
   },
 });
 
