@@ -81,8 +81,8 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		bloodGroup: {
 			type: String,
-			enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', ''],
-			default: '',
+			enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+			default: null,
 		},
 		NID: {
 			type: String,
@@ -123,6 +123,11 @@ export const StudentSchema = new Schema<IStudent>(
 				trim: true,
 				default: null,
 			},
+			examination: {
+				type: String,
+				enum: ['JSC', 'SSC', 'HSC'],
+				default: null,
+			},
 			GPA: { type: Number, default: null },
 			board: {
 				type: String,
@@ -139,7 +144,6 @@ export const StudentSchema = new Schema<IStudent>(
 					'Technical',
 					'Madrasah',
 					'DIBS(Dhaka)',
-					'',
 				],
 				default: null,
 			},

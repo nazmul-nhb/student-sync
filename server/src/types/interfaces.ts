@@ -44,14 +44,15 @@ export interface IStudentData {
 		upazila: string;
 		district: string;
 	};
-	bloodGroup: TBloodGroup;
+	bloodGroup: TBloodGroup | null;
 	NID: string | null;
 	studentMobile: string;
-	guardianMobile: string | '';
+	guardianMobile: string | null;
 	studentEmail: string;
 	minimumEducation: {
 		roll: string | string | null;
 		registration: string | string | null;
+		examination: 'JSC' | 'SSC' | 'HSC' | null;
 		GPA: number | null;
 		board: TBoard | null;
 		passingYear: string | null;
