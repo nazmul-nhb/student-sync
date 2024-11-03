@@ -107,8 +107,9 @@ export const validateStudentSchema = z.object({
   minimumEducation: z.object({
     roll: z.string().nullable(),
     registration: z.string().nullable(),
+    examination: z.string().optional(),
     GPA: z.number().nullable(),
     board: z.string().optional(),
-    passingYear: z.number().nullable(),
+    passingYear: z.string().nullable(),
   }),
 });

@@ -73,8 +73,9 @@ export interface IStudentData {
   guardianMobile: string | '';
   studentEmail: string;
   minimumEducation: {
-    roll: string | string | null;
-    registration: string | string | null;
+    roll: string | null;
+    registration: string | null;
+    examination: 'JSC' | 'SSC' | 'HSC' | '';
     GPA: number | null;
     board: TBoard;
     passingYear: string | null;

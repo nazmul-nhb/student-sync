@@ -298,7 +298,7 @@
 
         <!-- JSC/SS/Equivalent Education -->
         <div class="input-div space-y-2">
-          <label for="minimumEducation" class="label">JSC/SS/Equivalent</label>
+          <label for="minimumEducation" class="label">JSC/SSC/HSC/Equivalent</label>
           <div class="group-inputs">
             <input
               type="text"
@@ -312,6 +312,15 @@
               placeholder="Registration Number"
               class="input"
             />
+            <select
+              v-model="student.minimumEducation.examination"
+              class="input"
+            >
+              <option value="" disabled>Select Examination</option>
+              <option value="JSC">JSC</option>
+              <option value="SSC">SSC</option>
+              <option value="HSC">HSC</option>
+            </select>
           </div>
           <div class="group-inputs">
             <input
@@ -339,7 +348,9 @@
               id="passingYear"
               type="text"
               v-model="student.minimumEducation.passingYear"
-              @input="handleNumericInput('minimumEducation.passingYear', student)"
+              @input="
+                handleNumericInput('minimumEducation.passingYear', student)
+              "
               placeholder="Passing year"
               class="input"
             />
@@ -409,6 +420,7 @@ const student = reactive<IStudentData>({
   minimumEducation: {
     roll: null,
     registration: null,
+    examination: '',
     GPA: null,
     board: '',
     passingYear: null,

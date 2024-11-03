@@ -138,6 +138,12 @@
             studentData.minimumEducation.registration || 'Not Available'
           }}</span>
         </span>
+        <span class="">
+          <b>Examination: </b>
+          <span>{{
+            studentData.minimumEducation.examination || 'Not Available'
+          }}</span>
+        </span>
       </div>
       <div class="flex items-center justify-between gap-4 flex-wrap">
         <span class="">
@@ -148,6 +154,12 @@
           <b>Board: </b>
           <span>{{
             studentData.minimumEducation.board || 'Not Available'
+          }}</span>
+        </span>
+        <span class="">
+          <b>Passing Year: </b>
+          <span>{{
+            studentData.minimumEducation.passingYear || 'Not Available'
           }}</span>
         </span>
       </div>
