@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { IStudent } from '../types/model';
 import { generateID } from '@nazmul-nhb/id-generator';
+import dayjs from 'dayjs';
 
 export const StudentSchema = new Schema<IStudent>(
 	{
@@ -50,6 +51,13 @@ export const StudentSchema = new Schema<IStudent>(
 		dateOfBirth: {
 			type: Date,
 			required: [true, 'Date of birth is required'],
+			validate: {
+				validator: (value: Date) => {
+					const age = dayjs().diff(dayjs(value), 'year');
+					return age >= 14;
+				},
+				message: 'Student must be at least 14 years old',
+			},
 		},
 		maritalStatus: {
 			type: String,
@@ -86,7 +94,7 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		bloodGroup: {
 			type: String,
-			enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+			enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', ''],
 			default: null,
 		},
 		NID: {
@@ -130,7 +138,7 @@ export const StudentSchema = new Schema<IStudent>(
 			},
 			examination: {
 				type: String,
-				enum: ['JSC', 'SSC', 'HSC'],
+				enum: ['JSC', 'SSC', 'HSC', ''],
 				default: null,
 			},
 			GPA: { type: Number, default: null },
@@ -149,6 +157,7 @@ export const StudentSchema = new Schema<IStudent>(
 					'Technical',
 					'Madrasah',
 					'DIBS(Dhaka)',
+					'',
 				],
 				default: null,
 			},

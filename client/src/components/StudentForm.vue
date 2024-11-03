@@ -379,12 +379,18 @@ import { useAxiosSecure } from '@/hooks/useAxiosSecure';
 import { formatDateOnly } from '@/utilities/formatDate';
 import {
   handleNumericInput,
+  validateAge,
   validateStudentSchema,
 } from '@/utilities/validation';
 import { AxiosError } from 'axios';
 import { clearReactiveForm } from '@/utilities/clearForm';
 import { useRouter } from 'vue-router';
-import { showConfirmDialogue, showStaticAlert } from '@/utilities/sweetAlert';
+import {
+  showConfirmDialogue,
+  showLoadingSpinnerAlert,
+  showStaticAlert,
+} from '@/utilities/sweetAlert';
+import Swal from 'sweetalert2';
 
 // Get current user props
 const { currentUser } = defineProps<{ currentUser: IUser }>();
@@ -443,6 +449,19 @@ const handleSubmitStudent = async (): Promise<void> => {
     return;
   }
 
+  // Validate date of birth
+  if (student.dateOfBirth) {
+    const isValidAge = validateAge(student.dateOfBirth);
+
+    if (!isValidAge) {
+      toast.error('Your age must be at least 14!');
+      return;
+    }
+  } else {
+    toast.error('Select your date of birth!');
+    return;
+  }
+
   // If validation succeeds, proceed with form submission
   try {
     // Ask permission to submit form
@@ -454,10 +473,17 @@ const handleSubmitStudent = async (): Promise<void> => {
 
     // Proceed to submit
     if (proceed.isConfirmed) {
+      // Show loading spinner while submitting fom
+      showLoadingSpinnerAlert('Submitting Form...');
+
       const { data } = await axiosSecure.post<IRegResponse>(
         '/student/register',
         student,
       );
+
+      // Hide and close loading spinner
+      Swal.hideLoading();
+      Swal.close();
 
       if (data.success) {
         toast.success(data.message);

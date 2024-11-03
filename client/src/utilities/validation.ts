@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { z } from 'zod';
 
 // Regex function for password validation
@@ -113,3 +114,8 @@ export const validateStudentSchema = z.object({
     passingYear: z.string().nullable(),
   }),
 });
+
+export const validateAge = (date: string | Date): boolean => {
+  const age = dayjs().diff(dayjs(date), 'year');
+  return age >= 14;
+};
