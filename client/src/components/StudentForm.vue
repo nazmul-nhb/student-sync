@@ -7,13 +7,13 @@
         <!-- Course name -->
         <div class="input-div">
           <label for="courseName" class="label">Select a course</label>
-          <input
-            id="courseName"
-            type="text"
-            v-model="student.courseName"
-            placeholder="Select a course"
-            class="input"
-          />
+          <select v-model="student.courseName" class="input">
+            <option value="" disabled>Select a course</option>
+            <option value="Basic Computer">Basic Computer</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Data Entry">Data Entry</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+          </select>
         </div>
 
         <div class="group-inputs">
@@ -298,7 +298,9 @@
 
         <!-- JSC/SS/Equivalent Education -->
         <div class="input-div space-y-2">
-          <label for="minimumEducation" class="label">JSC/SSC/HSC/Equivalent</label>
+          <label for="minimumEducation" class="label"
+            >JSC/SSC/HSC/Equivalent</label
+          >
           <div class="group-inputs">
             <input
               type="text"

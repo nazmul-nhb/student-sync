@@ -1,5 +1,5 @@
 import type { IStudent } from './model';
-import type { TBloodGroup, TBoard } from './types';
+import type { TBloodGroup, TBoard, TCourse } from './types';
 
 export interface IErrorObject extends Error {
 	status?: number;
@@ -26,7 +26,7 @@ export interface IValidationResult {
 }
 
 export interface IStudentData {
-	courseName: string;
+	courseName: TCourse;
 	studentName: string;
 	fatherName: string;
 	motherName: string;

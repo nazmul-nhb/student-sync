@@ -3,7 +3,7 @@
   <Loader v-if="isUserLoading || isStudentLoading" />
 
   <!-- Show student data if loaded successfully -->
-  <section v-else-if="studentData" class="mx-auto w-1/2" >
+  <section v-else-if="studentData" class="mx-auto w-1/2">
     <div class="">
       <b>Course Name: </b>
       <span>{{ studentData.courseName }}</span>
@@ -122,7 +122,7 @@
       <b>Student's Email: </b>
       <span>{{ studentData.studentEmail }}</span>
     </div>
-    <!-- JSC/SSC/Equivalent -->
+    <!-- JSC/SSC/HSA/Equivalent -->
     <h3>JSC/SSC/Equivalent</h3>
     <div class="">
       <div class="flex items-center justify-between gap-4 flex-wrap">
@@ -164,6 +164,18 @@
         </span>
       </div>
     </div>
+    <div class="">
+      <b>Registered at: </b>
+      <span>{{
+        formatDateTimeStatic(studentData.createdAt)
+      }}</span>
+    </div>
+    <div class="">
+      <b>Updated at: </b>
+      <span>{{
+        formatDateTimeStatic(studentData.updatedAt)
+      }}</span>
+    </div>
   </section>
 
   <!-- Show error if query has an error and data is not loaded -->
@@ -183,7 +195,7 @@ import type { IStatusResponse, IStudentResponse } from '@/types/interfaces';
 import Error from '@/components/Error.vue';
 import Loader from '@/components/Loader.vue';
 import type { AxiosError } from 'axios';
-import { formatDateOnly, getCurrentAge } from '@/utilities/formatDate';
+import { formatDateOnly, formatDateTimeStatic, getCurrentAge } from '@/utilities/formatDate';
 
 const route = useRoute();
 const { id } = route.params;

@@ -1,5 +1,5 @@
 import type { RouteMeta } from 'vue-router';
-import type { TBloodGroup, TBoard } from './types';
+import type { TBloodGroup, TBoard, TCourse } from './types';
 
 export interface ICredentials {
   email: string;
@@ -49,7 +49,7 @@ export interface IRouteMeta extends RouteMeta {
 }
 
 export interface IStudentData {
-  courseName: string;
+  courseName: TCourse;
   studentName: string;
   fatherName: string;
   motherName: string;
@@ -70,7 +70,7 @@ export interface IStudentData {
   bloodGroup: TBloodGroup;
   NID: string | null;
   studentMobile: string;
-  guardianMobile: string | '';
+  guardianMobile: string | null;
   studentEmail: string;
   minimumEducation: {
     roll: string | null;
@@ -84,8 +84,8 @@ export interface IStudentData {
 
 export interface IStudent extends Required<IStudentData> {
   _id: string;
-  trainingLocation: 'Guler Mor, Natuarpara, Kazipur, Sirajganj';
-  courseDuration: '6 months';
+  trainingLocation: string;
+  courseDuration: string;
   registrationID: string;
   createdAt: Date;
   updatedAt: Date;

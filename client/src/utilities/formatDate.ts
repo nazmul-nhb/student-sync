@@ -7,6 +7,8 @@ dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 dayjs.extend(relativeTime);
 
+const now = dayjs();
+
 export const formatDateOnly = (date: string | Date): string => {
   return dayjs(date).format('ddd, MMM DD, YYYY');
 };
@@ -15,13 +17,15 @@ export const formatTimeOnly = (date: string | Date): string => {
   return dayjs(date).format('hh:mm:ssa');
 };
 
+export const formatDateTimeStatic = (date: string | Date): string => {
+  return dayjs(date).format('ddd, MMM DD, YYYY hh:mm:ssa');
+};
+
 export const getTimeStamp = (date: string | Date): number => {
   return dayjs(date).unix();
 };
 
-const now = dayjs();
-
-export const formatDateTime = (date: string | Date): string => {
+export const formatDateTimeDynamic = (date: string | Date): string => {
   const inputDate = dayjs(date);
 
   const minutesDiff = now.diff(inputDate, 'minutes');

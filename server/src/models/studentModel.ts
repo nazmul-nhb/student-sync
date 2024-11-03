@@ -6,7 +6,12 @@ export const StudentSchema = new Schema<IStudent>(
 	{
 		courseName: {
 			type: String,
-			trim: true,
+			enum: [
+				'Basic Computer',
+				'Web Development',
+				'Data Entry',
+				'Digital Marketing',
+			],
 			required: [true, 'Course name is required'],
 		},
 		trainingLocation: {

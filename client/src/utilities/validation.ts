@@ -78,7 +78,7 @@ export const validateLoginSchema = z.object({
 
 // Zod schema for the student form validation
 export const validateStudentSchema = z.object({
-  courseName: z.string().min(1, { message: 'Course name is required' }),
+  courseName: z.string().min(1, { message: 'Select a course to continue' }),
   studentName: z.string().min(1, { message: 'Student name is required' }),
   fatherName: z.string().min(1, { message: "Father's name is required" }),
   motherName: z.string().min(1, { message: "Mother's name is required" }),
