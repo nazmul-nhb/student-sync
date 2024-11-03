@@ -474,7 +474,7 @@ const handleSubmitStudent = async (): Promise<void> => {
     // Proceed to submit
     if (proceed.isConfirmed) {
       // Show loading spinner while submitting fom
-      showLoadingSpinnerAlert('Submitting Form...');
+      showLoadingSpinnerAlert('Submitting Form...', true);
 
       const { data } = await axiosSecure.post<IRegResponse>(
         '/student/register',

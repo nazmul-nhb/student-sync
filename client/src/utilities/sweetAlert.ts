@@ -36,11 +36,14 @@ export const showConfirmDialogue = async (
   });
 };
 
-export const showLoadingSpinnerAlert = (title: string) => {
+export const showLoadingSpinnerAlert = (
+  title: string,
+  allowOutsideClick: boolean = false,
+) => {
   return Swal.fire({
     title,
     text: 'Please wait for a while...',
-    allowOutsideClick: false,
+    allowOutsideClick,
     background: '#000000fa',
     color: '#fff',
     didOpen: () => {
