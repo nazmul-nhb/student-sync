@@ -86,14 +86,17 @@ export const StudentSchema = new Schema<IStudent>(
 		},
 		NID: {
 			type: String,
+			trim: true,
 			default: null,
 		},
 		studentMobile: {
 			type: String,
+			trim: true,
 			required: [true, 'Student mobile is required'],
 		},
 		guardianMobile: {
 			type: String,
+			trim: true,
 			default: '',
 		},
 		studentEmail: {
@@ -138,6 +141,11 @@ export const StudentSchema = new Schema<IStudent>(
 					'DIBS(Dhaka)',
 					'',
 				],
+				default: null,
+			},
+			passingYear: {
+				type: String,
+				trim: true,
 				default: null,
 			},
 		},

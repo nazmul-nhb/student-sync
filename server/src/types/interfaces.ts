@@ -54,6 +54,7 @@ export interface IStudentData {
 		registration: string | string | null;
 		GPA: number | null;
 		board: TBoard | null;
+		passingYear: string | null;
 	};
 }
 
