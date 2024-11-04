@@ -66,10 +66,9 @@ const router = useRouter();
 
 const authStore = useAuthStore();
 
-const userRole = authStore.getUserRole();
-
-const currentUser = computed(() => authStore.currentUser);
 const isUserLoading = computed(() => authStore.isUserLoading);
+const currentUser = computed(() => authStore.currentUser);
+const userRole = computed(() => authStore.getUserRole())
 
 const handleLogout = async () => {
   const loggedOut = await authStore.logOut();
