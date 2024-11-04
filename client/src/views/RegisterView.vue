@@ -92,11 +92,13 @@ import {
   showLoadingSpinnerAlert,
   showStaticAlert,
 } from '@/utilities/sweetAlert';
+import { useAxiosPublic } from '@/hooks/useAxiosPublic';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
 
 const router = useRouter();
+const axiosPublic = useAxiosPublic();
 
 // Define the form state
 const user = reactive<IUserRegister>({
@@ -165,6 +167,18 @@ const handleRegister = async () => {
   try {
     // Show spinner while registering new user
     showLoadingSpinnerAlert('Registering...');
+
+    // Check for existing user with the provided email
+    const {
+      data: { success: userExists, message: checkMessage },
+    } = await axiosPublic.post<IStatusResponse>(`/auth/check`, {
+      email: user.email,
+    });
+
+    if (userExists) {
+      showStaticAlert('User Already Exists!', checkMessage, 'warning');
+      return;
+    }
 
     // Upload the selected image file if available
     if (selectedFile.value) {
