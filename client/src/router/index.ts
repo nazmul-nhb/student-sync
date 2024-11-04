@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/stores/auth';
-import HomeView from '../views/HomeView.vue';
+import HomeView from '@/views/HomeView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
@@ -21,7 +21,7 @@ const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
   {
     path: '/students',
     name: 'Students',
-    component: () => import('../views/StudentsView.vue'),
+    component: () => import('@/views/StudentsView.vue'),
     meta: { requiresAuth: true, roles: ['admin'] },
   },
   {
@@ -45,7 +45,7 @@ const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
   {
     path: '/403',
     name: 'Forbidden',
-    component: () => import('../views/ForbiddenView.vue'),
+    component: () => import('@/views/ForbiddenView.vue'),
     meta: { requiresAuth: false },
   },
   {

@@ -166,15 +166,11 @@
     </div>
     <div class="">
       <b>Registered at: </b>
-      <span>{{
-        formatDateTimeStatic(studentData.createdAt)
-      }}</span>
+      <span>{{ formatDateTimeStatic(studentData.createdAt) }}</span>
     </div>
     <div class="">
       <b>Updated at: </b>
-      <span>{{
-        formatDateTimeStatic(studentData.updatedAt)
-      }}</span>
+      <span>{{ formatDateTimeStatic(studentData.updatedAt) }}</span>
     </div>
   </section>
 
@@ -187,7 +183,7 @@
 </template>
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useQuery } from '@tanstack/vue-query';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
@@ -195,16 +191,17 @@ import type { IStatusResponse, IStudentResponse } from '@/types/interfaces';
 import Error from '@/components/Error.vue';
 import Loader from '@/components/Loader.vue';
 import type { AxiosError } from 'axios';
-import { formatDateOnly, formatDateTimeStatic, getCurrentAge } from '@/utilities/formatDate';
+import {
+  formatDateOnly,
+  formatDateTimeStatic,
+  getCurrentAge,
+} from '@/utilities/formatDate';
 
 const route = useRoute();
 const { id } = route.params;
 
 const authStore = useAuthStore();
 const axiosSecure = useAxiosSecure();
-
-const studentData = ref<IStudentResponse['studentData'] | null>(null);
-const errorMessage = ref<string | undefined>('');
 
 // const currentUser = computed(() => authStore.currentUser);
 const isUserLoading = computed(() => authStore.isUserLoading);
@@ -217,24 +214,17 @@ const {
   // refetch,
 } = useQuery({
   queryKey: ['studentData', id],
+  enabled: !!id,
   queryFn: async () => {
     const { data } = await axiosSecure.get<IStudentResponse>(`/student/${id}`);
     return data;
   },
 });
 
-watch(data, newData => {
-  if (newData) {
-    studentData.value = newData.studentData;
-  }
-});
-
-watch(error, newError => {
-  if (newError) {
-    errorMessage.value = (
-      newError as AxiosError<IStatusResponse>
-    ).response?.data.message;
-  }
-});
+const studentData = computed(() => data.value?.studentData || null);
+const errorMessage = computed(
+  () =>
+    (error.value as AxiosError<IStatusResponse>)?.response?.data.message || '',
+);
 </script>
 <style scoped></style>

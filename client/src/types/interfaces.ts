@@ -96,6 +96,14 @@ export interface IStudentResponse extends IStatusResponse {
   studentData: IStudent;
 }
 
+export interface IStudentMinimal {
+  _id: string;
+  courseName: TCourse;
+  studentName: string;
+  registrationID: string;
+  studentImage?: string;
+}
+
 export interface IStudentsResponse extends IStatusResponse {
-  studentData: IStudent[];
+  studentData: IStudentMinimal[];
 }

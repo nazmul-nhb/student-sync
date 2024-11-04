@@ -28,7 +28,13 @@ const toastOptions: ToastContainerOptions = {
   theme: 'dark',
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 30,
+    },
+  },
+});
 
 const app = createApp(App);
 

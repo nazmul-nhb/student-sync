@@ -24,6 +24,7 @@
               id="studentName"
               name="studentName"
               type="text"
+              readonly
               v-model="student.studentName"
               placeholder="Enter student's name"
               class="input"
@@ -290,6 +291,7 @@
           <input
             id="studentEmail"
             type="email"
+            readonly
             v-model="student.studentEmail"
             placeholder="Enter student's email"
             class="input"
@@ -476,10 +478,9 @@ const handleSubmitStudent = async (): Promise<void> => {
       // Show loading spinner while submitting fom
       showLoadingSpinnerAlert('Submitting Form...', true);
 
-      const { data: {success, message, registrationID} } = await axiosSecure.post<IRegResponse>(
-        '/student/register',
-        student,
-      );
+      const {
+        data: { success, message, registrationID },
+      } = await axiosSecure.post<IRegResponse>('/student/register', student);
 
       // Hide and close loading spinner
       Swal.hideLoading();
