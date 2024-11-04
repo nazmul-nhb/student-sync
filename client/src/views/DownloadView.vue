@@ -29,13 +29,13 @@
       <span class="">
         <b>Date of Birth: </b>
         <span v-if="studentData.dateOfBirth">{{
-          formatDateOnly(studentData.dateOfBirth)
+          formatDateOnly(studentData.dateOfBirth) || 'Not Available'
         }}</span>
       </span>
       <span class="">
         <b>Current Age: </b>
         <span v-if="studentData.dateOfBirth">{{
-          getCurrentAge(studentData.dateOfBirth)
+          getCurrentAge(studentData.dateOfBirth) || "Not Available"
         }}</span>
       </span>
     </div>
@@ -115,7 +115,7 @@
       </span>
       <span class="">
         <b>Guardian's Mobile: </b>
-        <span>{{ studentData.guardianMobile }}</span>
+        <span>{{ studentData.guardianMobile || "Not Available" }}</span>
       </span>
     </div>
     <div class="">
