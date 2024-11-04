@@ -12,6 +12,41 @@ import { generateToken } from '../helpers/generateToken';
 import { validatePassword } from '../utils/validatePass';
 import { isMongoDuplicateKeyError } from '../helpers/checkMongoErrors';
 
+// Check for Duplicate user
+export const checkDuplicateUser = async (
+	req: Request<{}, {}, { email: string }>,
+	res: Response<IStatusResponse>,
+	next: NextFunction,
+) => {
+	try {
+		const { email } = req.body;
+
+		const userExists = await User.findOne({ email });
+
+		if (userExists) {
+			return res.status(200).send({
+				success: true,
+				message: `User with ${email} already exists!`,
+			});
+		}
+
+		return res.status(200).send({
+			success: false,
+			message: `You can proceed!`,
+		});
+	} catch (error) {
+		if (error instanceof Error) {
+			console.error(error.message);
+			return res.status(400).send({
+				success: false,
+				message: error.message,
+			});
+		}
+
+		next(error);
+	}
+};
+
 // Create New User
 export const createUser = async (
 	req: Request<{}, {}, IUserData>,
