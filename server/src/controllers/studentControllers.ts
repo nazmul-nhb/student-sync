@@ -5,6 +5,7 @@ import type {
 	IStudentData,
 	IStudentResponse,
 	IStudentsResponse,
+	IStudentMinimal,
 } from '../types/interfaces';
 import { Student } from '../models/studentModel';
 
@@ -49,7 +50,37 @@ export const getAllStudentData = async (
 	next: NextFunction,
 ) => {
 	try {
-		const studentData = await Student.find({});
+		const studentData: IStudentMinimal[] = await Student.aggregate([
+			// Lookup to find corresponding user based on studentEmail
+			{
+				$lookup: {
+					from: 'users',
+					localField: 'studentEmail',
+					foreignField: 'email',
+					as: 'userInfo',
+				},
+			},
+			// Unwind to turn the userInfo array into an object (if match exists)
+			{ $unwind: { path: '$userInfo', preserveNullAndEmptyArrays: true } },
+
+			// Add studentImage field from userInfo's image
+			{
+				$addFields: {
+					studentImage: '$userInfo.image',
+				},
+			},
+
+			// Select only required fields and exclude userInfo
+			{
+				$project: {
+					_id: 1,
+					studentName: 1,
+					courseName: 1,
+					registrationID: 1,
+					studentImage: 1,
+				},
+			},
+		]);
 
 		return res.status(200).send({
 			success: true,
