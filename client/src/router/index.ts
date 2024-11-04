@@ -19,9 +19,9 @@ const routes: Array<RouteRecordRaw & { meta: IRouteMeta }> = [
     meta: { requiresAuth: true, roles: ['user', 'admin'] },
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/AboutView.vue'),
+    path: '/students',
+    name: 'Students',
+    component: () => import('../views/StudentsView.vue'),
     meta: { requiresAuth: true, roles: ['admin'] },
   },
   {

@@ -476,7 +476,7 @@ const handleSubmitStudent = async (): Promise<void> => {
       // Show loading spinner while submitting fom
       showLoadingSpinnerAlert('Submitting Form...', true);
 
-      const { data } = await axiosSecure.post<IRegResponse>(
+      const { data: {success, message, registrationID} } = await axiosSecure.post<IRegResponse>(
         '/student/register',
         student,
       );
@@ -485,8 +485,8 @@ const handleSubmitStudent = async (): Promise<void> => {
       Swal.hideLoading();
       Swal.close();
 
-      if (data.success) {
-        toast.success(data.message);
+      if (success) {
+        toast.success(message);
         clearReactiveForm(student);
 
         // Ask permission to go to the download page
@@ -498,13 +498,13 @@ const handleSubmitStudent = async (): Promise<void> => {
 
         // Proceed to the download page
         if (proceedDownload.isConfirmed) {
-          router.push(`/download/${data.registrationID}`);
+          router.push(`/download/${registrationID}`);
         }
       } else {
-        toast.error(data.message);
+        toast.error(message);
         showStaticAlert(
           'Cannot SUbmit Form!',
-          data.message || 'Something went Wrong!',
+          message || 'Something went Wrong!',
           'error',
         );
       }

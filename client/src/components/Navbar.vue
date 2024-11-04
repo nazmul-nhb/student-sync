@@ -10,19 +10,19 @@
       </figure>
       <div class="w-full flex items-center justify-between gap-8">
         <!-- Nav Links -->
-        <div class="flex items-center justify-between gap-8">
-          <RouterLink
-            v-if="!isUserLoading && currentUser"
-            to="/"
-            active-class="active-link"
-            class="inactive-link"
+        <div
+          v-if="!isUserLoading && currentUser"
+          class="flex items-center justify-between gap-8"
+        >
+          <RouterLink to="/" active-class="active-link" class="inactive-link"
             >Home</RouterLink
           >
           <RouterLink
-            to="/about"
+            v-if="userRole === 'admin'"
+            to="/students"
             active-class="active-link"
             class="inactive-link"
-            >About</RouterLink
+            >Students</RouterLink
           >
         </div>
         <!-- Profile -->
@@ -65,6 +65,8 @@ import logo from '../assets/icons/logo.png';
 const router = useRouter();
 
 const authStore = useAuthStore();
+
+const userRole = authStore.getUserRole();
 
 const currentUser = computed(() => authStore.currentUser);
 const isUserLoading = computed(() => authStore.isUserLoading);
