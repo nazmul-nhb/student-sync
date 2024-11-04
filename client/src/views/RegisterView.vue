@@ -210,7 +210,7 @@ const handleRegister = async () => {
     } else {
       toast.error(message);
       showStaticAlert(
-        'Registration Error!',
+        'Registration Failed!',
         message || 'Something went Wrong!',
         'error',
       );

@@ -100,7 +100,7 @@ const handleLogin = async () => {
     } else {
       toast.error(message);
       showStaticAlert(
-        'Login Error!',
+        'Login Failed!',
         message || 'Something went Wrong!',
         'error',
       );
