@@ -1,11 +1,11 @@
 import { User } from '../user/user.model';
 import type { IUserData } from '../user/user.types';
 
-const checkDuplicateUser = async (email: string) => {
-	const user = await User.findOne({ email });
+// const checkDuplicateUser = async (email: string) => {
+// 	const user = await User.findOne({ email });
 
-    return user;
-};
+//     return user;
+// };
 
 /**
  * Create a new user in MongoDB `user` collection.
@@ -18,4 +18,7 @@ const registerUserInDB = async (payload: IUserData) => {
 	return newUser;
 };
 
-export const authServices = { checkDuplicateUser, registerUserInDB };
+export const authServices = {
+    // checkDuplicateUser,
+    registerUserInDB
+};
