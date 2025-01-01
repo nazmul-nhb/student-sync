@@ -92,13 +92,13 @@ import {
   showLoadingSpinnerAlert,
   showStaticAlert,
 } from '@/utilities/sweetAlert';
-import { useAxiosPublic } from '@/hooks/useAxiosPublic';
+// import { useAxiosPublic } from '@/hooks/useAxiosPublic';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
 
 const router = useRouter();
-const axiosPublic = useAxiosPublic();
+// const axiosPublic = useAxiosPublic();
 
 // Define the form state
 const user = reactive<IUserRegister>({
@@ -129,11 +129,11 @@ const handleImageChange = (event: Event) => {
       selectedFile.value = file;
       imageError.value = '';
     } else {
-      imageError.value = 'Only JPG and PNG files are allowed';
+      imageError.value = 'Only JPG and PNG files are allowed!';
       selectedFile.value = null;
     }
   } else {
-    imageError.value = 'Image is required';
+    imageError.value = 'Image is required!';
     selectedFile.value = null;
   }
 
@@ -156,7 +156,7 @@ const handleRegister = async () => {
 
   // Check if the image file is selected
   if (!selectedFile.value) {
-    imageError.value = 'Image is required';
+    imageError.value = 'Image is required!';
     toast.error(imageError.value);
     return;
   } else {
@@ -168,21 +168,9 @@ const handleRegister = async () => {
     // Show spinner while registering new user
     showLoadingSpinnerAlert('Registering...');
 
-    // Check for existing user with the provided email
-    const {
-      data: { success: userExists, message: checkMessage },
-    } = await axiosPublic.post<IStatusResponse>(`/auth/check`, {
-      email: user.email,
-    });
-
-    if (userExists) {
-      showStaticAlert('User Already Exists!', checkMessage, 'warning');
-      return;
-    }
-
     // Upload the selected image file if available
     if (selectedFile.value) {
-      user.image = await uploadImage(selectedFile.value);
+      user.image = await uploadImage(selectedFile.value, user.email);
     }
 
     const { success, message } = await registerUser(user);
@@ -220,7 +208,7 @@ const handleRegister = async () => {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
         showStaticAlert(
-          error.message,
+          "Registration Failed!",
           axiosError.response.data.message,
           'error',
         );
