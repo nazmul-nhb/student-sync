@@ -1,20 +1,18 @@
 // useAxiosSecure.js
-import { useAuthStore } from '@/stores/auth';
-import { baseUrl } from '@/utilities/constants';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { baseUrl } from '@/utilities/constants';
 
 const axiosSecure = axios.create({ baseURL: baseUrl });
 
 export const useAxiosSecure = () => {
   const router = useRouter();
-  const { logOut } = useAuthStore();
 
   // Add request interceptor to include authorization headers
   axiosSecure.interceptors.request.use(
     config => {
       const token = localStorage.getItem('student-token');
-      
+
       if (!token) {
         console.warn('Missing Access Token! Redirecting to Login Page...');
 
@@ -43,7 +41,7 @@ export const useAxiosSecure = () => {
       if (status === 401 || status === 403) {
         console.error('Unauthorized or Forbidden Access: ', status);
 
-        logOut();
+        localStorage.removeItem('student-token');
         router.push('/login');
       }
 
