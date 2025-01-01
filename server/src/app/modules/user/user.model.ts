@@ -2,6 +2,8 @@ import { Schema, model } from 'mongoose';
 import type { IUser, IUserModel } from './user.types';
 import { STATUS_CODES } from '../../constants';
 import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
+import { USER_ROLES } from './user.constants';
+import { hashPassword } from '../../utilities/authUtilities';
 
 export const userSchema = new Schema<IUser>(
 	{
@@ -15,13 +17,6 @@ export const userSchema = new Schema<IUser>(
 			required: [true, 'User Must Provide Email!'],
 			unique: true,
 			trim: true,
-			validate: {
-				validator: (value: string) => {
-					const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-					return emailRegex.test(value);
-				},
-				message: 'Provide a valid email address!',
-			},
 		},
 		image: {
 			type: String,
@@ -29,16 +24,24 @@ export const userSchema = new Schema<IUser>(
 		},
 		password: {
 			type: String,
+			trim: true,
 			required: [true, 'User Must Provide Password!'],
+			select: false,
 		},
 		role: {
 			type: String,
-			enum: ['user', 'admin'],
+			enum: USER_ROLES,
 			default: 'user',
 		},
 	},
 	{ timestamps: true },
 );
+
+userSchema.pre('save', async function (next) {
+	this.password = await hashPassword(this.password);
+
+	next();
+});
 
 /** Static method to check if user exists */
 userSchema.statics.validateUser = async function (email?: string) {
@@ -66,4 +69,3 @@ userSchema.statics.validateUser = async function (email?: string) {
 };
 
 export const User = model<IUser, IUserModel>('User', userSchema);
-
