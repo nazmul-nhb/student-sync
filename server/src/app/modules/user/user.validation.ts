@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isFirstLetterCapital } from '../../utilities';
+import { isFirstLetterCapital } from '../../utilities/validationUtils';
 import { authValidations } from '../auth/auth.validation';
 
 /** Zod schema to validate name and image url. */
@@ -10,7 +10,7 @@ const nameImageSchema = z.object({
 		.min(3)
 		.max(255)
 		.refine((value) => isFirstLetterCapital(value), {
-			message: 'Name must start with a capital letter',
+			message: 'Name must start with a capital letter!',
 		}),
 	image: z
 		.string({ required_error: 'Image url is required!' })
