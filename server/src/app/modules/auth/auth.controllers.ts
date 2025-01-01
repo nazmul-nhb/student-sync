@@ -1,26 +1,8 @@
 import catchAsync from '../../utilities/catchAsync';
 import sendResponse from '../../utilities/sendResponse';
 import { authServices } from './auth.services';
-import type { IUserData } from '../user/user.types';
-
-/** Check for duplicate user */
-// const checkDuplicateUser = catchAsync(async (req, res) => {
-// 	const email = req.body.email as string;
-
-// 	const result = await authServices.checkDuplicateUser(email);
-
-// 	if (result) {
-// 		res.status(200).send({
-// 			success: true,
-// 			message: `User with ${email} already exists!`,
-// 		});
-// 	} else {
-// 		res.status(200).send({
-// 			success: false,
-// 			message: `You can proceed!`,
-// 		});
-// 	}
-// });
+import type { ICredentials, IUserData } from '../user/user.types';
+import configs from '../../configs';
 
 /** Register a new user */
 const registerUser = catchAsync(async (req, res) => {
@@ -31,7 +13,20 @@ const registerUser = catchAsync(async (req, res) => {
 	sendResponse(res, 'User', 'POST', result, 'Registered successfully!');
 });
 
-export const authControllers = {
-    // checkDuplicateUser,
-    registerUser
-};
+/** Login a user */
+const loginUser = catchAsync(async (req, res) => {
+	const credentials = req.body as ICredentials;
+
+	const tokens = await authServices.loginUser(credentials);
+
+	const { refreshToken, accessToken } = tokens;
+
+	res.cookie('refreshToken', refreshToken, {
+		secure: configs.NODE_ENV === 'production',
+		httpOnly: true,
+	});
+
+	sendResponse(res, 'User', 'OK', { accessToken }, 'Login successful!');
+});
+
+export const authControllers = { registerUser, loginUser };

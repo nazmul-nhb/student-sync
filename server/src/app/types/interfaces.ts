@@ -45,7 +45,7 @@ export interface IRoute {
 	route: Router;
 }
 
-export interface StudentPayload extends JwtPayload {
+export interface DecodedToken extends JwtPayload {
 	email: string;
 	role: TUserRole;
 }

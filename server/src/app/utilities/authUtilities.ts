@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import configs from '../configs';
 import { ErrorWithStatus } from '../classes/ErrorWithStatus';
 import { STATUS_CODES } from '../constants';
-import type { StudentPayload } from '../types/interfaces';
+import type { DecodedToken } from '../types/interfaces';
 
 /**
  * Utility function to hash password using `bcrypt`.
@@ -53,7 +53,7 @@ export const comparePassword = async (
  * @returns
  */
 export const generateToken = (
-	payload: StudentPayload,
+	payload: DecodedToken,
 	secret: string,
 	expiresIn: string,
 ): string => {
@@ -75,7 +75,7 @@ export const generateToken = (
  * @param token Token from client.
  * @returns Decoded token payload.
  */
-export const verifyToken = (secret: string, token?: string): StudentPayload => {
+export const verifyToken = (secret: string, token?: string): DecodedToken => {
 	if (!token) {
 		throw new ErrorWithStatus(
 			'Authorization Error',
@@ -86,7 +86,7 @@ export const verifyToken = (secret: string, token?: string): StudentPayload => {
 	}
 
 	try {
-		return jwt.verify(token, secret) as StudentPayload;
+		return jwt.verify(token, secret) as DecodedToken;
 	} catch (_error) {
 		throw new ErrorWithStatus(
 			'Authorization Error',

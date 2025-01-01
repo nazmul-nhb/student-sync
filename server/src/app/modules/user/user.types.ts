@@ -27,3 +27,8 @@ export interface IUser extends IUserData, Document {
 export interface IUserModel extends Model<IUser> {
 	validateUser(email?: string): Promise<IUser>;
 }
+
+export interface ITokens {
+	accessToken: string;
+	refreshToken: string;
+}
