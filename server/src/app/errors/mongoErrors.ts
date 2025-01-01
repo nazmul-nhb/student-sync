@@ -5,9 +5,7 @@ import type {
 	IErrorSource,
 } from '../types/interfaces';
 
-/**
- * Processes Mongoose Validation Errors and returns a structured response.
- */
+/** Processes Mongoose Validation Errors and returns a structured response. */
 export const handleValidationError = (
 	error: MongoError.ValidationError,
 	stack?: string,
@@ -27,9 +25,7 @@ export const handleValidationError = (
 	};
 };
 
-/**
- * Processes Mongoose Cast Errors and returns a structured response.
- */
+/** Processes Mongoose Cast Errors and returns a structured response. */
 export const handleCastError = (
 	error: MongoError.CastError,
 	stack?: string,
@@ -47,18 +43,29 @@ export const handleCastError = (
 	};
 };
 
+/** Process MongoDB Duplicate Error */
 export const handleDuplicateError = (
 	error: IDuplicateError,
 	stack?: string,
 ) => {
 	const key = Object.keys(error.keyValue)[0];
+
+	const collectionMatch = error?.errorResponse?.errmsg?.match(
+		/collection: (\w+)\.(\w+)/,
+	);
+
+	const collection = collectionMatch
+		? collectionMatch[2].charAt(0).toUpperCase() +
+			collectionMatch[2].slice(1).replace(/s$/, '')
+		: 'Document';
+
 	return {
 		statusCode: 409,
 		name: 'MongoDB Duplicate Error',
 		errorSource: [
 			{
 				path: key,
-				message: `Document exists with ${key}: ${error.keyValue[key]}`,
+				message: `${collection} exists with ${key}: ${error.keyValue[key]}`,
 			},
 		],
 		stack,
