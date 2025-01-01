@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import type { IUser, IUserModel } from './user.types';
 import { STATUS_CODES } from '../../constants';
 import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
-import { USER_ROLES } from './user.constants';
+import { USER_ROLE } from './user.constants';
 import { hashPassword } from '../../utilities/authUtilities';
 
 export const userSchema = new Schema<IUser>(
@@ -30,8 +30,8 @@ export const userSchema = new Schema<IUser>(
 		},
 		role: {
 			type: String,
-			enum: USER_ROLES,
-			default: 'user',
+			enum: Object.values(USER_ROLE),
+			default: USER_ROLE.USER,
 		},
 	},
 	{ timestamps: true },

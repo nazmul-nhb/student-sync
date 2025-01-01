@@ -1,9 +1,9 @@
 import type { Document } from 'mongoose';
 import type { Model, Types } from 'mongoose';
-import type { USER_ROLES } from './user.constants';
+import type { USER_ROLE } from './user.constants';
 
 /** User Roles */
-export type TUserRole = (typeof USER_ROLES)[number];
+export type TUserRole = (typeof USER_ROLE)[keyof typeof USER_ROLE];
 
 /** Login credentials (email and password) */
 export interface ICredentials {
