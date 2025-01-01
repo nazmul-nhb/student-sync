@@ -52,7 +52,7 @@
 
         <!-- Image File -->
         <div class="input-div">
-          <label for="imageFile" class="label"><FaImage /> </label>
+          <label for="imageFile" class="label !py-[13px]"><FaImage /> </label>
           <input
             id="imageFile"
             name="imageFile"
@@ -60,7 +60,7 @@
             placeholder="Choose your profile picture"
             @change="handleImageChange"
             accept="image/png, image/jpeg"
-            class="input"
+            class="input !py-[6.5px]"
           />
         </div>
 
