@@ -14,6 +14,7 @@ export const useAxiosSecure = () => {
   axiosSecure.interceptors.request.use(
     config => {
       const token = localStorage.getItem('student-token');
+      
       if (!token) {
         console.warn('Missing Access Token! Redirecting to Login Page...');
 
@@ -23,6 +24,7 @@ export const useAxiosSecure = () => {
       }
       // proceed if token is found
       config.headers.Authorization = `Bearer ${token}`;
+
       return config;
     },
     error => {

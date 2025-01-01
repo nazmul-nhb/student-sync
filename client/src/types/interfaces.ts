@@ -37,11 +37,11 @@ export interface IUser extends Omit<IUserRegister, 'password'> {
   updatedAt: Date;
 }
 
-export interface IUserResponse<T> {
+export interface IServerResponse<T> {
   success: boolean;
   message: string;
   statusCode: number;
-  data: T;
+  data?: T;
 }
 
 export interface IDecodedToken extends JwtPayload {

@@ -22,7 +22,7 @@ const { getUser } = useGetUser();
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    currentUser: null as IUser | null,
+    currentUser: null as IUser | null | undefined,
     isUserLoading: false as boolean,
   }),
 
