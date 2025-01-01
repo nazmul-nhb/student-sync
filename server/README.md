@@ -1,4 +1,4 @@
-# Bangu Blogs Server
+# Student Sync Server
 
 - [Live Server Link](https://bangu-blogs-server-nhb.vercel.app)
 
@@ -8,7 +8,7 @@
   </summary>
 
    1. **[Overview](#-overview)**  
-   2. **[Key Features of Bangu Blogs Server](#-key-features-of-bangu-blogs-server)**  
+   2. **[Key Features of Student Sync Server](#-key-features-of-student-sync-server)**  
    3. **[Technologies (Packages) Used](#️-technologies-packages-used)**  
    4. **[Run the Server Locally](#️-run-the-server-locally)**  
       - [Prerequisites](#prerequisites)  
@@ -16,36 +16,23 @@
    5. **[Authentication](#-authentication)**  
       - [User Registration](#user-registration)  
       - [User Login](#user-login)  
-   6. **[Blog Management](#-blog-management)**  
-      - [Create Blog](#create-blog)  
-      - [Update Blog](#update-blog)  
-      - [Delete Blog](#delete-blog)  
-   7. **[Admin Actions](#️-admin-actions)**  
-      - [Block User](#block-user)  
-      - [Delete Blog (Admin)](#delete-blog-admin)  
-   8. **[Search, Sort & Filter Blogs](#-search-sort--filter-blogs)**  
-   9. **[Error Handling](#-error-handling)**  
-   10. **[Custom Progress Indicators](#-custom-progress-indicators)**
-   11. **[Project Overview Video](#-project-overview-video)**  
-   12. **[Admin Credentials](#-admin-credentials)**  
+   6. **[Error Handling](#-error-handling)**  
+   7. **[Custom Progress Indicators](#-custom-progress-indicators)**
 
 </details>
 
 ## 📚 Overview
 
-Bangu Blogs Server is a robust backend application built for managing blogs with user authentication, role-based access control, and comprehensive API functionalities. It supports both **Admin** and **User** roles with tailored permissions and features.
+Student Sync Server is a robust backend application built for managing students with user authentication, role-based access control, and comprehensive API functionalities. It supports both **Admin** and **User** roles with tailored permissions and features.
 
-## 🚀 **Key Features of Bangu Blogs Server**
+## 🚀 **Key Features of Student Sync Server**
 
 1. **User Authentication & Authorization:** Secure login with role-based access control (Admin, User).  
-2. **Role Management:** Admins can block users and manage all blogs, while users can manage their own content.  
-3. **JWT-Based Security:** Access and refresh tokens ensure secure session management.  
-4. **Middleware Protection:** Role-based access enforced through middleware (`authorizeUser`).  
-5. **Blog Management:** Full CRUD operations for blogs, with ownership validation.  
-6. **Search, Sort & Filter:**  Efficient querying powered by a reusable `QueryBuilder` class, designed to support future module expansions.  
-7. **Password Encryption:** User passwords are securely hashed using **bcrypt**.  
-8. **Data Validation:** Input validated with **Zod** schemas to ensure data integrity.  
-9. **Scalable Architecture:** Modular and well-structured backend code for maintainability.  
+2. **JWT-Based Security:** Access and refresh tokens ensure secure session management.  
+3. **Middleware Protection:** Role-based access enforced through middleware (`authorizeUser`).  
+4. **Password Encryption:** User passwords are securely hashed using **bcrypt**.  
+5. **Data Validation:** Input validated with **Zod** schemas to ensure data integrity.  
+6. **Scalable Architecture:** Modular and well-structured backend code for maintainability.  
 
 ## ⚙️ Technologies (Packages) Used
 
@@ -450,14 +437,3 @@ Implemented **custom progress indicators** using `progress-estimator`, `globby` 
 - **Deploy:** `pnpm run deploy` – Builds the project and deploys it to **Vercel** with production settings, displaying progress for both stages.  
 
 ---
-
-## 📹 Project Overview Video
-
-- **[Project Overview Video Link](https://drive.google.com/file/d/1Bi0j3PaH5MbJzWZfVO4VkVRNCAKJEQV0/view?usp=sharing)**
-
----
-
-## 🧠 Admin Credentials
-
-- **Email:** `admin@bangu.com`
-- **Password:** `123456`
