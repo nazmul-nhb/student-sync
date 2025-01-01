@@ -1,6 +1,6 @@
 import cors from 'cors';
 import express from 'express';
-import router from './app/routes';
+import router from './app/router';
 import cookieParser from 'cookie-parser';
 import sendResponse from './app/utilities/sendResponse';
 import type { Application, Request, Response } from 'express';

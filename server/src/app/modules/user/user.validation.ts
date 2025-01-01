@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { isFirstLetterCapital } from '../../utilities';
+import { authValidations } from '../auth/auth.validation';
 
-const creationSchema = z.object({
+/** Zod schema to validate name and image url. */
+const nameImageSchema = z.object({
 	name: z
 		.string({ required_error: 'Name is required!' })
 		.trim()
@@ -10,9 +12,12 @@ const creationSchema = z.object({
 		.refine((value) => isFirstLetterCapital(value), {
 			message: 'Name must start with a capital letter',
 		}),
-	email: z.string({ required_error: 'Email is required!' }).trim().email(),
-	image: z.string({ required_error: 'Image is required!' }).trim(),
-	password: z.string({ required_error: 'Password is required!' }).trim(),
+	image: z
+		.string({ required_error: 'Image url is required!' })
+		.trim()
+		.url({ message: 'Invalid URL format!' }),
 });
 
-export const userSchema = { creationSchema };
+const creationSchema = nameImageSchema.merge(authValidations.loginSchema);
+
+export const userValidations = { creationSchema };
