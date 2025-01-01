@@ -11,10 +11,14 @@ import type {
   IErrorResponse,
   IUserRegister,
   IUser,
+  IDecodedToken,
 } from '@/types/interfaces';
 import { showConfirmDialogue } from '@/utilities/sweetAlert';
+import { useGetUser } from '@/hooks/useGetUser';
 
 const axiosPublic = useAxiosPublic();
+
+const { getUser } = useGetUser();
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -25,13 +29,23 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     async initializeUser() {
       this.isUserLoading = true;
-      const token = localStorage.getItem('student-token');
-      if (token) {
-        this.currentUser = jwtDecode(token);
-      } else {
+
+      try {
+        const token = localStorage.getItem('student-token');
+
+        if (token) {
+          const decodedToken: IDecodedToken = jwtDecode(token);
+
+          this.currentUser = await getUser(decodedToken.email);
+        } else {
+          this.currentUser = null;
+        }
+      } catch (error) {
+        console.error('Failed to initialize user:', error);
         this.currentUser = null;
+      } finally {
+        this.isUserLoading = false;
       }
-      this.isUserLoading = false;
     },
 
     waitUntilUserLoaded() {
@@ -87,8 +101,11 @@ export const useAuthStore = defineStore('auth', {
         );
 
         if (data.success) {
-          localStorage.setItem('student-token', data.accessToken);
-          this.currentUser = jwtDecode(data.accessToken);
+          localStorage.setItem('student-token', data.data.accessToken);
+
+          const decodedToken: IDecodedToken = jwtDecode(data.data.accessToken);
+
+          this.currentUser = await getUser(decodedToken.email);
         }
 
         this.isUserLoading = false;

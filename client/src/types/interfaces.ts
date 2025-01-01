@@ -1,5 +1,6 @@
 import type { RouteMeta } from 'vue-router';
 import type { TBloodGroup, TBoard, TCourse } from './types';
+import type { JwtPayload } from 'jwt-decode';
 
 export interface ICredentials {
   email: string;
@@ -17,7 +18,7 @@ export interface IStatusResponse {
 }
 
 export interface ILoginResponse extends IStatusResponse {
-  accessToken: string;
+  data: { accessToken: string };
 }
 
 export interface IRegResponse extends IStatusResponse {
@@ -31,11 +32,21 @@ export interface IErrorResponse extends IStatusResponse {
 export interface IUser extends Omit<IUserRegister, 'password'> {
   _id: string;
   __v: number;
-  exp: number;
-  iat: number;
   role: 'user' | 'admin';
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IUserResponse<T> {
+  success: boolean;
+  message: string;
+  statusCode: number;
+  data: T;
+}
+
+export interface IDecodedToken extends JwtPayload {
+  email: string;
+  role: 'user' | 'admin';
 }
 
 export interface ISignatureData {
