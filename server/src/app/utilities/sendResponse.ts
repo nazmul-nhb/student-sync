@@ -8,6 +8,7 @@ import type { TCollection, TMethod, TResponseDetails } from '../types';
  * @param collection The name of the collection (e.g., 'Student').
  * @param method The method type (e.g., 'POST', 'GET', 'PUT', 'PATCH', 'DELETE' etc.).
  * @param data Optional data to include in the response.
+ * @param customMessage Send custom message for the response.
  */
 const sendResponse = <T>(
 	res: Response,

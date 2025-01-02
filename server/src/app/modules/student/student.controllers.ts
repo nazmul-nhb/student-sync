@@ -14,9 +14,25 @@ const registerStudent = catchAsync(async (req, res) => {
 const getStudentData = catchAsync(async (req, res) => {
 	const studentData = req.params.id as string;
 
-	const result = await studentServices.getStudentDataFromDB(studentData);
+	const student = await studentServices.getStudentDataFromDB(studentData);
 
-	sendResponse(res, 'Student', 'POST', result);
+	sendResponse(res, 'Student', 'GET', student);
 });
 
-export const studentControllers = { registerStudent, getStudentData };
+const getAllStudentData = catchAsync(async (_req, res) => {
+	const students = await studentServices.getAllStudentDataFromDB();
+
+	sendResponse(
+		res,
+		'Student',
+		'GET',
+		students,
+		`Total ${students.length} students registered!`,
+	);
+});
+
+export const studentControllers = {
+	registerStudent,
+	getStudentData,
+	getAllStudentData,
+};

@@ -20,4 +20,10 @@ router.get(
 	studentControllers.getStudentData,
 );
 
+router.get(
+	'/',
+	authorizeUser(USER_ROLE.ADMIN),
+	studentControllers.getAllStudentData,
+);
+
 export const studentRoutes = router;
