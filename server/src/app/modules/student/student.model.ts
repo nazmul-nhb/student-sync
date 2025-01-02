@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { model, Schema } from "mongoose";
 import type { IStudent } from "./student.types";
 import { BLOOD_GROUPS, EDUCATION_BOARDS, EXAMINATION_NAMES } from './student.constants';
@@ -45,13 +44,6 @@ export const studentSchema = new Schema<IStudent>(
 		dateOfBirth: {
 			type: Date,
 			required: [true, 'Date of birth is required!'],
-			validate: {
-				validator: (value: Date) => {
-					const age = dayjs().diff(dayjs(value), 'year');
-					return age >= 14;
-				},
-				message: 'Student must be at least 14 years old',
-			},
 		},
 		maritalStatus: {
 			type: String,
