@@ -5,8 +5,12 @@
   <!-- Show student data if loaded successfully -->
   <section v-else-if="studentData" class="mx-auto w-1/2">
     <div class="">
-      <b>Course Name: </b>
+      <b>Registered Course: </b>
       <span>{{ studentData.courseName }}</span>
+    </div>
+    <div class="">
+      <b>Registration ID: </b>
+      <span>{{ studentData.registrationID }}</span>
     </div>
     <div class="">
       <b>Training Location: </b>
@@ -181,13 +185,14 @@
     :subHeading="error?.message || 'Please, register first!'"
   />
 </template>
+
 <script setup lang="ts">
 import { useRoute } from 'vue-router';
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useQuery } from '@tanstack/vue-query';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
-import type { IStatusResponse, IStudentResponse } from '@/types/interfaces';
+import type { IErrorResponse, IStudent, IServerResponse } from '@/types/interfaces';
 import Error from '@/components/Error.vue';
 import Loader from '@/components/Loader.vue';
 import type { AxiosError } from 'axios';
@@ -216,15 +221,17 @@ const {
   queryKey: ['studentData', id],
   enabled: !!id,
   queryFn: async () => {
-    const { data } = await axiosSecure.get<IStudentResponse>(`/student/${id}`);
+    const { data } = await axiosSecure.get<IServerResponse<IStudent>>(`/students/${id}`);
     return data;
   },
 });
 
-const studentData = computed(() => data.value?.studentData || null);
+const studentData = computed(() => data.value?.data || null);
+
 const errorMessage = computed(
   () =>
-    (error.value as AxiosError<IStatusResponse>)?.response?.data.message || '',
+    (error.value as AxiosError<IErrorResponse>)?.response?.data.message || 'Something Went Wrong!',
 );
 </script>
+
 <style scoped></style>

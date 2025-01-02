@@ -105,10 +105,6 @@ export interface IStudent extends Required<IStudentData> {
   __v: number;
 }
 
-export interface IStudentResponse extends IStatusResponse {
-  studentData: IStudent;
-}
-
 export interface IStudentMinimal {
   _id: string;
   courseName: TCourse;
@@ -117,6 +113,3 @@ export interface IStudentMinimal {
   studentImage?: string;
 }
 
-export interface IStudentsResponse extends IStatusResponse {
-  studentData: IStudentMinimal[];
-}

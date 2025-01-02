@@ -1,12 +1,10 @@
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import router from '@/router';
 import { baseUrl } from '@/utilities/constants';
 
 const axiosSecure = axios.create({ baseURL: baseUrl });
 
 export const useAxiosSecure = () => {
-  const router = useRouter();
-
   // Add request interceptor to include authorization headers
   axiosSecure.interceptors.request.use(
     config => {

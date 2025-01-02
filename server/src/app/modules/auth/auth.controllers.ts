@@ -10,7 +10,7 @@ const registerUser = catchAsync(async (req, res) => {
 
 	await authServices.registerUserInDB(userData);
 
-	sendResponse(res, 'User', 'POST', 'Registered successfully!');
+	sendResponse(res, 'User', 'POST', null, 'Registered successfully!');
 });
 
 /** Login a user */

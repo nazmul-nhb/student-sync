@@ -33,7 +33,11 @@
 import Error from '@/components/Error.vue';
 import Loader from '@/components/Loader.vue';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
-import type { IStatusResponse, IStudentsResponse } from '@/types/interfaces';
+import type {
+  IErrorResponse,
+  IServerResponse,
+  IStudentMinimal,
+} from '@/types/interfaces';
 import { useQuery } from '@tanstack/vue-query';
 import type { AxiosError } from 'axios';
 import { computed } from 'vue';
@@ -49,15 +53,17 @@ const {
 } = useQuery({
   queryKey: ['studentsData'],
   queryFn: async () => {
-    const { data } = await axiosSecure.get<IStudentsResponse>(`/student`);
+    const { data } =
+      await axiosSecure.get<IServerResponse<IStudentMinimal[]>>(`/students`);
     return data;
   },
 });
 
-const studentsData = computed(() => data.value?.studentData || []);
+const studentsData = computed(() => data.value?.data || []);
 const errorMessage = computed(
   () =>
-    (error.value as AxiosError<IStatusResponse>)?.response?.data.message || '',
+    (error.value as AxiosError<IErrorResponse>)?.response?.data.message ||
+    'Something Went Wrong!',
 );
 </script>
 

@@ -80,7 +80,7 @@ export const useAuthStore = defineStore('auth', {
           status: number = 500;
 
         if (error instanceof AxiosError) {
-          message = error.response?.data?.message || 'Registration Error!';
+          message = error.response?.data?.message || 'Registration Failed!';
           status = error.response?.status || 500;
         }
         return { success: false, message, status };
@@ -121,13 +121,13 @@ export const useAuthStore = defineStore('auth', {
           status: number = 500;
 
         if (error instanceof AxiosError) {
-          message = error.response?.data?.message || 'Registration Error!';
+          message = error.response?.data?.message || 'Login Failed!';
           status = error.response?.status || 500;
         }
 
         const response = (error as AxiosError<IErrorResponse>).response
           ?.data || { success: false, message, status };
-        
+
         return response;
       }
     },
