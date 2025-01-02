@@ -1,4 +1,3 @@
-// useAxiosSecure.js
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { baseUrl } from '@/utilities/constants';

@@ -3,7 +3,7 @@ import sendResponse from '../../utilities/sendResponse';
 import { studentServices } from './student.services';
 import type { IStudentData } from './student.types';
 
-const createStudent = catchAsync(async (req, res) => {
+const registerStudent = catchAsync(async (req, res) => {
 	const studentData = req.body as IStudentData;
 
 	const registrationID = await studentServices.createStudentInDB(studentData);
@@ -11,4 +11,4 @@ const createStudent = catchAsync(async (req, res) => {
 	sendResponse(res, 'Student', 'POST', { registrationID });
 });
 
-export const studentControllers = { createStudent };
+export const studentControllers = { registerStudent };

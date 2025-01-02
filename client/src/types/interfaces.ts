@@ -21,7 +21,7 @@ export interface IAccessToken {
   accessToken: string;
 }
 
-export interface IRegResponse extends IStatusResponse {
+export interface IRegistrationID {
   registrationID: string;
 }
 

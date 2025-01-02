@@ -11,7 +11,7 @@ router.post(
 	'/register',
 	authorizeUser(USER_ROLE.ADMIN, USER_ROLE.USER),
 	validateRequest(studentValidations.creationSchema),
-	studentControllers.createStudent,
+	studentControllers.registerStudent,
 );
 
 export const studentRoutes = router;

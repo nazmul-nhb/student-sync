@@ -372,7 +372,8 @@ import { reactive } from 'vue';
 import { toast } from 'vue3-toastify';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import type {
-  IRegResponse,
+  IRegistrationID,
+  IServerResponse,
   IStatusResponse,
   IStudentData,
   IUser,
@@ -475,12 +476,19 @@ const handleSubmitStudent = async (): Promise<void> => {
 
     // Proceed to submit
     if (proceed.isConfirmed) {
-      // Show loading spinner while submitting fom
+      // Show loading spinner while submitting the form
       showLoadingSpinnerAlert('Submitting Form...', true);
 
       const {
-        data: { success, message, registrationID },
-      } = await axiosSecure.post<IRegResponse>('/student/register', student);
+        data: {
+          success,
+          message,
+          data: { registrationID },
+        },
+      } = await axiosSecure.post<IServerResponse<IRegistrationID>>(
+        '/students/register',
+        student,
+      );
 
       // Hide and close loading spinner
       Swal.hideLoading();
