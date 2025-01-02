@@ -7,4 +7,10 @@ const createStudentInDB = async (payload: IStudentData) => {
 	return newStudent.registrationID;
 };
 
-export const studentServices = { createStudentInDB };
+const getStudentDataFromDB = async (registrationID: string) => {
+    const studentData = await Student.findOne({ registrationID });
+
+    return studentData;
+}
+
+export const studentServices = { createStudentInDB, getStudentDataFromDB };

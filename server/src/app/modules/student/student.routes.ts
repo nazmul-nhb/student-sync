@@ -14,4 +14,10 @@ router.post(
 	studentControllers.registerStudent,
 );
 
+router.get(
+	'/:id',
+	authorizeUser(USER_ROLE.ADMIN, USER_ROLE.USER),
+	studentControllers.getStudentData,
+);
+
 export const studentRoutes = router;

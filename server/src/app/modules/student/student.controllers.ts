@@ -11,4 +11,12 @@ const registerStudent = catchAsync(async (req, res) => {
 	sendResponse(res, 'Student', 'POST', { registrationID });
 });
 
-export const studentControllers = { registerStudent };
+const getStudentData = catchAsync(async (req, res) => {
+	const studentData = req.params.id as string;
+
+	const result = await studentServices.getStudentDataFromDB(studentData);
+
+	sendResponse(res, 'Student', 'POST', result);
+});
+
+export const studentControllers = { registerStudent, getStudentData };
