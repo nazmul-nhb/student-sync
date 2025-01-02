@@ -8,9 +8,9 @@ import configs from '../../configs';
 const registerUser = catchAsync(async (req, res) => {
 	const userData = req.body as IUserData;
 
-	const result = await authServices.registerUserInDB(userData);
+	await authServices.registerUserInDB(userData);
 
-	sendResponse(res, 'User', 'POST', result, 'Registered successfully!');
+	sendResponse(res, 'User', 'POST', 'Registered successfully!');
 });
 
 /** Login a user */

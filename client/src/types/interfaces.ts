@@ -17,8 +17,8 @@ export interface IStatusResponse {
   message: string;
 }
 
-export interface ILoginResponse extends IStatusResponse {
-  data: { accessToken: string };
+export interface IAccessToken {
+  accessToken: string;
 }
 
 export interface IRegResponse extends IStatusResponse {
@@ -27,6 +27,9 @@ export interface IRegResponse extends IStatusResponse {
 
 export interface IErrorResponse extends IStatusResponse {
   status: number;
+  error?: {
+    details: { name: string; path: string; message: string }[];
+  };
 }
 
 export interface IUser extends Omit<IUserRegister, 'password'> {
@@ -40,8 +43,7 @@ export interface IUser extends Omit<IUserRegister, 'password'> {
 export interface IServerResponse<T> {
   success: boolean;
   message: string;
-  statusCode: number;
-  data?: T;
+  data: T;
 }
 
 export interface IDecodedToken extends JwtPayload {

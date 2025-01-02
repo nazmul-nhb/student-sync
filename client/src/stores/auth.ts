@@ -6,12 +6,13 @@ import { toast } from 'vue3-toastify';
 import { useAxiosPublic } from '@/hooks/useAxiosPublic';
 import type {
   ICredentials,
-  ILoginResponse,
+  IAccessToken,
   IStatusResponse,
   IErrorResponse,
   IUserRegister,
   IUser,
   IDecodedToken,
+  IServerResponse,
 } from '@/types/interfaces';
 import { showConfirmDialogue } from '@/utilities/sweetAlert';
 import { useGetUser } from '@/hooks/useGetUser';
@@ -22,7 +23,7 @@ const { getUser } = useGetUser();
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    currentUser: null as IUser | null | undefined,
+    currentUser: null as IUser | null,
     isUserLoading: false as boolean,
   }),
 
@@ -92,10 +93,10 @@ export const useAuthStore = defineStore('auth', {
 
     async loginUser(
       user: ICredentials,
-    ): Promise<ILoginResponse | IErrorResponse> {
+    ): Promise<IServerResponse<IAccessToken> | IErrorResponse> {
       this.isUserLoading = true;
       try {
-        const { data } = await axiosPublic.post<ILoginResponse>(
+        const { data } = await axiosPublic.post<IServerResponse<IAccessToken>>(
           '/auth/login',
           user,
         );
@@ -120,10 +121,14 @@ export const useAuthStore = defineStore('auth', {
           status: number = 500;
 
         if (error instanceof AxiosError) {
-          message = error.response?.data?.message || 'Login Error!';
+          message = error.response?.data?.message || 'Registration Error!';
           status = error.response?.status || 500;
         }
-        return { success: false, message, status };
+
+        const response = (error as AxiosError<IErrorResponse>).response
+          ?.data || { success: false, message, status };
+        
+        return response;
       }
     },
 
