@@ -40,7 +40,7 @@ export interface IStudentData {
 	studentMobile: string;
 	guardianMobile: string | null;
 	studentEmail: string;
-	minimumEducation: {
+	minimumEducation?: {
 		roll: string | string | null;
 		registration: string | string | null;
 		examination: TExamination | null;

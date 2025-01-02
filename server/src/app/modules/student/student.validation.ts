@@ -44,10 +44,10 @@ const creationSchema = z.object({
 			registration: z.string().nullable().optional(),
 			examination: z.enum(EXAMINATION_NAMES).nullable().optional(),
 			GPA: z.number().nullable().optional(),
-			board: z.enum(EDUCATION_BOARDS).nullable(),
+			board: z.enum(EDUCATION_BOARDS).nullable().optional(),
 			passingYear: z.string().nullable().optional(),
 		})
 		.optional(),
 });
 
-export const studentValidation = { creationSchema };
+export const studentValidations = { creationSchema };

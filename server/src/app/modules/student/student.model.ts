@@ -1,17 +1,17 @@
-import { model, Schema } from "mongoose";
-import type { IStudent } from "./student.types";
-import { BLOOD_GROUPS, EDUCATION_BOARDS, EXAMINATION_NAMES } from './student.constants';
+import { model, Schema, type CallbackError } from 'mongoose';
+import type { IStudent } from './student.types';
+import {
+	BLOOD_GROUPS,
+	COURSE,
+	EDUCATION_BOARDS,
+	EXAMINATION_NAMES,
+} from './student.constants';
 
 export const studentSchema = new Schema<IStudent>(
 	{
 		courseName: {
 			type: String,
-			enum: [
-				'Basic Computer',
-				'Web Development',
-				'Data Entry',
-				'Digital Marketing',
-			],
+			enum: Object.keys(COURSE) as [keyof typeof COURSE],
 			required: [true, 'Course name is required!'],
 		},
 		trainingLocation: {
@@ -24,7 +24,7 @@ export const studentSchema = new Schema<IStudent>(
 		},
 		registrationID: {
 			type: String,
-			required: [true, 'Registration id is required!'],
+			unique: true,
 		},
 		studentName: {
 			type: String,
@@ -81,7 +81,7 @@ export const studentSchema = new Schema<IStudent>(
 		bloodGroup: {
 			type: String,
 			enum: BLOOD_GROUPS,
-			default: "",
+			default: '',
 		},
 		NID: {
 			type: String,
@@ -123,7 +123,7 @@ export const studentSchema = new Schema<IStudent>(
 			board: {
 				type: String,
 				enum: EDUCATION_BOARDS,
-				default: "",
+				default: '',
 			},
 			passingYear: {
 				type: String,
@@ -134,5 +134,21 @@ export const studentSchema = new Schema<IStudent>(
 	},
 	{ timestamps: true },
 );
+
+studentSchema.pre('save', async function (next) {
+	try {
+		const studentCount = await Student.countDocuments({
+			courseName: this.courseName,
+		});
+
+		const newID = `${COURSE[this.courseName]}-${(studentCount + 1).toString().padStart(6, '0')}`;
+
+		this.registrationID = newID;
+
+		next();
+	} catch (error) {
+		next(error as CallbackError);
+	}
+});
 
 export const Student = model<IStudent>('Student', studentSchema);
