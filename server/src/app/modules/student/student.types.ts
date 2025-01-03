@@ -50,7 +50,7 @@ export interface IStudentData {
 	};
 }
 
-export interface IStudent extends Omit<IStudentData, "user">, Document {
+export interface IStudent extends Omit<IStudentData, 'user'>, Document {
 	_id: Types.ObjectId;
 	user: Types.ObjectId | IUser;
 	trainingLocation: 'Guler Mor, Natuarpara, Kazipur, Sirajganj';
@@ -60,8 +60,9 @@ export interface IStudent extends Omit<IStudentData, "user">, Document {
 
 export interface IStudentMinimal {
 	_id: Types.ObjectId;
-	courseName: TCourse;
 	studentName: string;
-	registrationID: string;
+	studentEmail: string;
 	studentImage: string;
+	courseName: TCourse;
+	registrationID: string;
 }

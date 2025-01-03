@@ -42,6 +42,7 @@ const getAllStudentDataFromDB = async () => {
 		return {
 			_id: student._id,
 			studentName: (student.user as IUser).name,
+			studentEmail: (student.user as IUser).email,
 			studentImage: (student.user as IUser).image,
 			courseName: student.courseName,
 			registrationID: student.registrationID,

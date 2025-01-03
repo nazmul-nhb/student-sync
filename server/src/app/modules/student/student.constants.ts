@@ -5,7 +5,17 @@ export const COURSE = {
 	'Digital Marketing': 'MARKETING',
 } as const;
 
-export const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-', ''] as const;
+export const BLOOD_GROUPS = [
+	'A+',
+	'A-',
+	'B+',
+	'B-',
+	'AB+',
+	'AB-',
+	'O+',
+	'O-',
+	'',
+] as const;
 
 export const EXAMINATION_NAMES = ['JSC', 'SSC', 'HSC', ''] as const;
 
