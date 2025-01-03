@@ -93,7 +93,7 @@ export const useAuthStore = defineStore('auth', {
 
     async loginUser(
       user: ICredentials,
-    ): Promise<IServerResponse<IAccessToken> | IErrorResponse> {
+    ): Promise<IServerResponse<IAccessToken>> {
       this.isUserLoading = true;
       try {
         const { data } = await axiosPublic.post<IServerResponse<IAccessToken>>(
@@ -109,26 +109,11 @@ export const useAuthStore = defineStore('auth', {
           this.currentUser = await getUser(decodedToken.email);
         }
 
-        this.isUserLoading = false;
-
         return data;
       } catch (error) {
-        console.error(error);
-
+        throw error;
+      } finally {
         this.isUserLoading = false;
-
-        let message: string = 'Something Went Wrong!',
-          status: number = 500;
-
-        if (error instanceof AxiosError) {
-          message = error.response?.data?.message || 'Login Failed!';
-          status = error.response?.status || 500;
-        }
-
-        const response = (error as AxiosError<IErrorResponse>).response
-          ?.data || { success: false, message, status };
-
-        return response;
       }
     },
 
