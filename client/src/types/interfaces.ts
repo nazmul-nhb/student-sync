@@ -72,10 +72,11 @@ export interface IStudent extends Required<IStudentData> {
 
 export interface IStudentMinimal {
   _id: string;
-  courseName: TCourse;
   studentName: string;
-  registrationID: string;
+  studentEmail: string;
   studentImage: string;
+  courseName: TCourse;
+  registrationID: string;
 }
 
 export interface IServerResponse<T> {

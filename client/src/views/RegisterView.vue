@@ -193,7 +193,10 @@ const handleRegister = async () => {
 
       // Proceed to the login page
       if (proceed.isConfirmed) {
-        router.push('/login');
+        router.push({
+          path: '/login',
+          query: { redirect: router.currentRoute.value.fullPath },
+        });
       }
     } else {
       toast.error(message);
@@ -208,7 +211,7 @@ const handleRegister = async () => {
       const axiosError = error as AxiosError<IStatusResponse>;
       if (axiosError.response && axiosError.response.data) {
         showStaticAlert(
-          "Registration Failed!",
+          'Registration Failed!',
           axiosError.response.data.message,
           'error',
         );

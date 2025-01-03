@@ -68,12 +68,16 @@ const authStore = useAuthStore();
 
 const isUserLoading = computed(() => authStore.isUserLoading);
 const currentUser = computed(() => authStore.currentUser);
-const userRole = computed(() => authStore.getUserRole())
+const userRole = computed(() => authStore.getUserRole());
 
 const handleLogout = async () => {
   const loggedOut = await authStore.logOut();
+
   if (loggedOut) {
-    router.push('/login');
+    router.push({
+      path: '/login',
+      query: { redirect: router.currentRoute.value.fullPath },
+    });
   }
 };
 </script>

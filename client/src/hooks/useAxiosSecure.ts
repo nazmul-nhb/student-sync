@@ -13,7 +13,10 @@ export const useAxiosSecure = () => {
       if (!token) {
         console.warn('Missing Access Token! Redirecting to Login Page...');
 
-        router.push('/login');
+        router.push({
+          path: '/login',
+          query: { redirect: router.currentRoute.value.fullPath },
+        });
 
         return Promise.reject(new Error('Missing Access Token!'));
       }
@@ -39,7 +42,10 @@ export const useAxiosSecure = () => {
         console.error('Unauthorized or Forbidden Access: ', status);
 
         localStorage.removeItem('student-token');
-        router.push('/login');
+        router.push({
+          path: '/login',
+          query: { redirect: router.currentRoute.value.fullPath },
+        });
       }
 
       return Promise.reject(error);

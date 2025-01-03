@@ -445,7 +445,7 @@ const handleSubmitStudent = async (): Promise<void> => {
     // Display each validation error as a toast notification
     result.error.errors.forEach(error => {
       toast.error(error.message);
-      console.log(error);
+      console.error(error);
     });
     return;
   }

@@ -2,7 +2,8 @@ export type TCourse =
   | 'Basic Computer'
   | 'Web Development'
   | 'Data Entry'
-  | 'Digital Marketing' | '';
+  | 'Digital Marketing'
+  | '';
 
 export type TBloodGroup =
   | 'A+'

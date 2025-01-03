@@ -60,6 +60,7 @@ const {
 });
 
 const studentsData = computed(() => data.value?.data || []);
+
 const errorMessage = computed(
   () =>
     (error.value as AxiosError<IErrorResponse>)?.response?.data.message ||

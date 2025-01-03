@@ -6,11 +6,13 @@ import { useAxiosPublic } from './useAxiosPublic';
 export const useCloudinary = () => {
   const axiosPublic = useAxiosPublic();
 
-  const uploadImage = async (file: File, email:string): Promise<string> => {
+  const uploadImage = async (file: File, email: string): Promise<string> => {
     try {
       // Request a signed signature for the upload
-      const { data: signatureData } =
-        await axiosPublic.post<ISignatureData>('/uploads/image', {email});
+      const { data: signatureData } = await axiosPublic.post<ISignatureData>(
+        '/uploads/image',
+        { email },
+      );
 
       // Prepare form data for the Cloudinary upload
       const formData = new FormData();
