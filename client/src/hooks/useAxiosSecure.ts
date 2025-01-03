@@ -25,8 +25,9 @@ export const useAxiosSecure = () => {
 
       return config;
     },
+
+    // Handle request errors
     error => {
-      // Handle request errors
       return Promise.reject(error);
     },
   );
@@ -37,15 +38,13 @@ export const useAxiosSecure = () => {
     async error => {
       const status = error.response ? error.response.status : null;
 
-      // If the token is invalid or expired, log out and redirect
+      // If the token is invalid or expired, redirect to 403
       if (status === 401 || status === 403) {
         console.error('Unauthorized or Forbidden Access: ', status);
 
-        localStorage.removeItem('student-token');
-        router.push({
-          path: '/login',
-          query: { redirect: router.currentRoute.value.fullPath },
-        });
+        // localStorage.removeItem('student-token');
+
+        router.push({ path: '/403' });
       }
 
       return Promise.reject(error);

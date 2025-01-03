@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import type { ICredentials, IStatusResponse } from '@/types/interfaces';
+import type { ICredentials, IErrorResponse } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { FaEye, FaEyeSlash } from 'vue3-icons/fa';
 import { RiLockPasswordFill } from 'vue3-icons/ri';
@@ -107,11 +107,11 @@ const handleLogin = async () => {
     }
   } catch (error) {
     if (error instanceof AxiosError) {
-      const axiosError = error as AxiosError<IStatusResponse>;
+      const axiosError = error as AxiosError<IErrorResponse>;
       if (axiosError.response && axiosError.response.data) {
         showStaticAlert(
-          error.message,
-          axiosError.response.data.message,
+          axiosError.response?.data?.error?.name || 'Login Failed',
+          axiosError.response?.data?.message || 'User Login Failed!',
           'error',
         );
       }

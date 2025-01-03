@@ -1,7 +1,7 @@
 <template>
   <Error
-    heading="403 | Forbidden!"
-    subHeading="You are not allowed to view this page!"
+    heading="Unauthorized (401) or Forbidden (403) Access!"
+    subHeading="You are not authorized to access this resource!"
   />
 </template>
 <script setup lang="ts">

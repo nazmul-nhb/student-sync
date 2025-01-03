@@ -19,7 +19,7 @@
         <div class="group-inputs">
           <!-- Student Name -->
           <div class="input-div">
-            <label for="studentName" class="label">Enter your name</label>
+            <label for="studentName" class="label">Your name</label>
             <input
               id="studentName"
               name="studentName"
@@ -287,13 +287,13 @@
 
         <!-- Student Email -->
         <div class="input-div">
-          <label for="studentEmail" class="label">Enter student's email</label>
+          <label for="studentEmail" class="label">Your email</label>
           <input
             id="studentEmail"
             type="email"
             readonly
             :value="currentUser.email"
-            placeholder="Enter student's email"
+            placeholder="Student email"
             class="input"
           />
         </div>
@@ -374,7 +374,7 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import type {
   IRegistrationID,
   IServerResponse,
-  IStatusResponse,
+  IErrorResponse,
   IStudentData,
   IUser,
 } from '@/types/interfaces';
@@ -518,11 +518,11 @@ const handleSubmitStudent = async (): Promise<void> => {
     }
   } catch (error) {
     if (error instanceof AxiosError) {
-      const axiosError = error as AxiosError<IStatusResponse>;
+      const axiosError = error as AxiosError<IErrorResponse>;
       if (axiosError.response && axiosError.response.data) {
         showStaticAlert(
-          error.message,
-          axiosError.response.data.message,
+          axiosError.response?.data?.error?.name || 'Registration Failed',
+          axiosError.response?.data?.message || 'Course Registration Failed!',
           'error',
         );
       } else {

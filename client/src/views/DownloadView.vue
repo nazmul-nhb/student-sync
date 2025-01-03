@@ -181,8 +181,8 @@
   <!-- Show error if query has an error and data is not loaded -->
   <Error
     v-else-if="isError || !studentData"
-    :heading="errorMessage || 'Student Not Found'"
-    :subHeading="error?.message || 'Please, register first!'"
+    :heading="downLoadError.name || 'Student Not Found!'"
+    :subHeading="downLoadError.message || 'Please, register first!'"
   />
 </template>
 
@@ -234,11 +234,14 @@ const {
 
 const studentData = computed(() => data.value?.data || null);
 
-const errorMessage = computed(
-  () =>
-    (error.value as AxiosError<IErrorResponse>)?.response?.data.message ||
-    'Something Went Wrong!',
-);
+const downLoadError = computed(() => {
+  const axiosError = error.value as AxiosError<IErrorResponse>;
+
+  return {
+    name: axiosError?.response?.data?.error.name || axiosError?.name,
+    message: axiosError?.response?.data?.message || axiosError?.message
+  };
+});
 </script>
 
 <style scoped></style>

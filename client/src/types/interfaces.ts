@@ -100,8 +100,9 @@ export interface IRegistrationID {
 
 export interface IErrorResponse extends IStatusResponse {
   status: number;
-  error?: {
-    details: { name: string; path: string; message: string }[];
+  error: {
+    name: string;
+    details: { name: string; path: string | number; message: string }[];
   };
 }
 

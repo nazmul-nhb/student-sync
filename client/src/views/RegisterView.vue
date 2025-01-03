@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { IStatusResponse, IUserRegister } from '@/types/interfaces';
+import type { IErrorResponse, IUserRegister } from '@/types/interfaces';
 import { useAuthStore } from '@/stores/auth';
 import { useCloudinary } from '@/hooks/useCloudinary';
 import { FaEye, FaEyeSlash, FaUserEdit } from 'vue3-icons/fa';
@@ -92,13 +92,11 @@ import {
   showLoadingSpinnerAlert,
   showStaticAlert,
 } from '@/utilities/sweetAlert';
-// import { useAxiosPublic } from '@/hooks/useAxiosPublic';
 
 const { registerUser } = useAuthStore();
 const { uploadImage } = useCloudinary();
 
 const router = useRouter();
-// const axiosPublic = useAxiosPublic();
 
 // Define the form state
 const user = reactive<IUserRegister>({
@@ -208,11 +206,11 @@ const handleRegister = async () => {
     }
   } catch (error) {
     if (error instanceof AxiosError) {
-      const axiosError = error as AxiosError<IStatusResponse>;
+      const axiosError = error as AxiosError<IErrorResponse>;
       if (axiosError.response && axiosError.response.data) {
         showStaticAlert(
-          'Registration Failed!',
-          axiosError.response.data.message,
+          axiosError.response?.data?.error?.name || 'Registration Failed',
+          axiosError.response?.data?.message || 'User Registration Failed!',
           'error',
         );
       }
