@@ -17,7 +17,10 @@ const registerStudent = catchAsync(async (req, res) => {
 const getStudentData = catchAsync(async (req, res) => {
 	const studentData = req.params.id as string;
 
-	const student = await studentServices.getStudentDataFromDB(studentData);
+	const student = await studentServices.getStudentDataFromDB(
+		studentData,
+		req?.user?.email,
+	);
 
 	sendResponse(res, 'Student', 'GET', student);
 });

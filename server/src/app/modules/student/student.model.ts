@@ -6,6 +6,8 @@ import {
 	EDUCATION_BOARDS,
 	EXAMINATION_NAMES,
 } from './student.constants';
+import { STATUS_CODES } from '../../constants';
+import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
 
 export const studentSchema = new Schema<IStudent>(
 	{
@@ -128,6 +130,20 @@ export const studentSchema = new Schema<IStudent>(
 
 studentSchema.pre('save', async function (next) {
 	try {
+		const alreadyRegistered = await Student.findOne({
+			user: this.user,
+			courseName: this.courseName,
+		});
+
+		if (alreadyRegistered) {
+			throw new ErrorWithStatus(
+				'Already Registered',
+				'Please, Select a different course!',
+				STATUS_CODES.CONFLICT,
+				'student',
+			);
+		}
+
 		const studentCount = await Student.countDocuments({
 			courseName: this.courseName,
 		});

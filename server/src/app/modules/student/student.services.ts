@@ -15,7 +15,9 @@ const createStudentInDB = async (payload: IStudentData, email?: string) => {
 	return newStudent.registrationID;
 };
 
-const getStudentDataFromDB = async (registrationID: string) => {
+const getStudentDataFromDB = async (registrationID: string, email?: string) => {
+	const user = await User.validateUser(email);
+
 	const student = await Student.findOne({ registrationID }).populate(
 		'user',
 		'name email image',
@@ -26,6 +28,18 @@ const getStudentDataFromDB = async (registrationID: string) => {
 			'Not Found Error',
 			`Student not found with registration id ${registrationID}!`,
 			STATUS_CODES.NOT_FOUND,
+			'student',
+		);
+	}
+
+	if (
+		user.role !== 'admin' &&
+		user._id.toString() !== student.user._id.toString()
+	) {
+		throw new ErrorWithStatus(
+			'Unauthorized Access',
+			'You are not authorized to access this resource!',
+			STATUS_CODES.UNAUTHORIZED,
 			'student',
 		);
 	}
