@@ -80,7 +80,6 @@ export const validateLoginSchema = z.object({
 // Zod schema for the student form validation
 export const validateStudentSchema = z.object({
   courseName: z.string().min(1, { message: 'Select a course to continue' }),
-  studentName: z.string().min(1, { message: 'Student name is required' }),
   fatherName: z.string().min(1, { message: "Father's name is required" }),
   motherName: z.string().min(1, { message: "Mother's name is required" }),
   dateOfBirth: z.date().nullable(),
@@ -101,10 +100,6 @@ export const validateStudentSchema = z.object({
   NID: z.string().nullable(),
   studentMobile: z.string().min(1, { message: 'Provide your mobile number' }),
   guardianMobile: z.string().optional(),
-  studentEmail: z
-    .string()
-    .email({ message: 'Enter a valid email address' })
-    .min(1, { message: 'Provide your email address' }),
   minimumEducation: z.object({
     roll: z.string().nullable(),
     registration: z.string().nullable(),

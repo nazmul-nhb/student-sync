@@ -31,7 +31,7 @@ const toastOptions: ToastContainerOptions = {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60,
+      staleTime: 1000 * 60 * 5,
     },
   },
 });

@@ -17,7 +17,7 @@
         <figure>
           <img
             class="w-20 rounded-full p-1 border aspect-square"
-            :src="student?.studentImage"
+            :src="student.studentImage"
             :alt="student.studentName"
           />
         </figure>

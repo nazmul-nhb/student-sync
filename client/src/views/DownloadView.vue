@@ -18,7 +18,7 @@
     </div>
     <div class="">
       <b>Student's Name: </b>
-      <span>{{ studentData.studentName }}</span>
+      <span>{{ studentData.user.name }}</span>
     </div>
     <div class="">
       <b>Father's Name: </b>
@@ -39,7 +39,7 @@
       <span class="">
         <b>Current Age: </b>
         <span v-if="studentData.dateOfBirth">{{
-          getCurrentAge(studentData.dateOfBirth) || "Not Available"
+          getCurrentAge(studentData.dateOfBirth) || 'Not Available'
         }}</span>
       </span>
     </div>
@@ -119,12 +119,12 @@
       </span>
       <span class="">
         <b>Guardian's Mobile: </b>
-        <span>{{ studentData.guardianMobile || "Not Available" }}</span>
+        <span>{{ studentData.guardianMobile || 'Not Available' }}</span>
       </span>
     </div>
     <div class="">
       <b>Student's Email: </b>
-      <span>{{ studentData.studentEmail }}</span>
+      <span>{{ studentData.user.email }}</span>
     </div>
     <!-- JSC/SSC/HSA/Equivalent -->
     <h3>JSC/SSC/Equivalent</h3>
@@ -192,7 +192,11 @@ import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import { useQuery } from '@tanstack/vue-query';
 import { useAxiosSecure } from '@/hooks/useAxiosSecure';
-import type { IErrorResponse, IStudent, IServerResponse } from '@/types/interfaces';
+import type {
+  IErrorResponse,
+  IStudent,
+  IServerResponse,
+} from '@/types/interfaces';
 import Error from '@/components/Error.vue';
 import Loader from '@/components/Loader.vue';
 import type { AxiosError } from 'axios';
@@ -221,7 +225,9 @@ const {
   queryKey: ['studentData', id],
   enabled: !!id,
   queryFn: async () => {
-    const { data } = await axiosSecure.get<IServerResponse<IStudent>>(`/students/${id}`);
+    const { data } = await axiosSecure.get<IServerResponse<IStudent>>(
+      `/students/${id}`,
+    );
     return data;
   },
 });
@@ -230,7 +236,8 @@ const studentData = computed(() => data.value?.data || null);
 
 const errorMessage = computed(
   () =>
-    (error.value as AxiosError<IErrorResponse>)?.response?.data.message || 'Something Went Wrong!',
+    (error.value as AxiosError<IErrorResponse>)?.response?.data.message ||
+    'Something Went Wrong!',
 );
 </script>
 

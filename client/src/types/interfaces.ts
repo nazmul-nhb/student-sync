@@ -12,26 +12,6 @@ export interface IUserRegister extends ICredentials {
   image: string;
 }
 
-export interface IStatusResponse {
-  success: boolean;
-  message: string;
-}
-
-export interface IAccessToken {
-  accessToken: string;
-}
-
-export interface IRegistrationID {
-  registrationID: string;
-}
-
-export interface IErrorResponse extends IStatusResponse {
-  status: number;
-  error?: {
-    details: { name: string; path: string; message: string }[];
-  };
-}
-
 export interface IUser extends Omit<IUserRegister, 'password'> {
   _id: string;
   __v: number;
@@ -40,30 +20,9 @@ export interface IUser extends Omit<IUserRegister, 'password'> {
   updatedAt: Date;
 }
 
-export interface IServerResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
-
-export interface IDecodedToken extends JwtPayload {
-  email: string;
-  role: 'user' | 'admin';
-}
-
-export interface ISignatureData {
-  signature: string;
-  timestamp: number;
-}
-
-export interface IRouteMeta extends RouteMeta {
-  requiresAuth?: boolean;
-  roles?: ('user' | 'admin')[];
-}
-
 export interface IStudentData {
   courseName: TCourse;
-  studentName: string;
+  // studentName: string;
   fatherName: string;
   motherName: string;
   dateOfBirth: Date | null;
@@ -84,7 +43,7 @@ export interface IStudentData {
   NID: string | null;
   studentMobile: string;
   guardianMobile: string | null;
-  studentEmail: string;
+  // studentEmail: string;
   minimumEducation: {
     roll: string | null;
     registration: string | null;
@@ -97,6 +56,12 @@ export interface IStudentData {
 
 export interface IStudent extends Required<IStudentData> {
   _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
+  };
   trainingLocation: string;
   courseDuration: string;
   registrationID: string;
@@ -110,6 +75,46 @@ export interface IStudentMinimal {
   courseName: TCourse;
   studentName: string;
   registrationID: string;
-  studentImage?: string;
+  studentImage: string;
 }
 
+export interface IServerResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+export interface IStatusResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface IAccessToken {
+  accessToken: string;
+}
+
+export interface IRegistrationID {
+  registrationID: string;
+}
+
+export interface IErrorResponse extends IStatusResponse {
+  status: number;
+  error?: {
+    details: { name: string; path: string; message: string }[];
+  };
+}
+
+export interface IDecodedToken extends JwtPayload {
+  email: string;
+  role: 'user' | 'admin';
+}
+
+export interface ISignatureData {
+  signature: string;
+  timestamp: number;
+}
+
+export interface IRouteMeta extends RouteMeta {
+  requiresAuth?: boolean;
+  roles?: ('user' | 'admin')[];
+}

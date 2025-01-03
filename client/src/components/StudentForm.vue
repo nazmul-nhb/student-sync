@@ -25,8 +25,8 @@
               name="studentName"
               type="text"
               readonly
-              v-model="student.studentName"
-              placeholder="Enter student's name"
+              :value="currentUser.name"
+              placeholder="Student name"
               class="input"
             />
           </div>
@@ -292,7 +292,7 @@
             id="studentEmail"
             type="email"
             readonly
-            v-model="student.studentEmail"
+            :value="currentUser.email"
             placeholder="Enter student's email"
             class="input"
           />
@@ -406,7 +406,6 @@ const axiosSecure = useAxiosSecure();
 // Define reactive student data
 const student = reactive<IStudentData>({
   courseName: '',
-  studentName: currentUser.name,
   fatherName: '',
   motherName: '',
   dateOfBirth: null,
@@ -427,7 +426,6 @@ const student = reactive<IStudentData>({
   NID: null,
   studentMobile: '',
   guardianMobile: '',
-  studentEmail: currentUser.email,
   minimumEducation: {
     roll: null,
     registration: null,
