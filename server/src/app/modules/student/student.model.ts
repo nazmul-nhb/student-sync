@@ -9,6 +9,7 @@ import {
 
 export const studentSchema = new Schema<IStudent>(
 	{
+		user: { type: Schema.Types.ObjectId, ref: 'User' },
 		courseName: {
 			type: String,
 			enum: Object.keys(COURSE) as [keyof typeof COURSE],
@@ -25,11 +26,6 @@ export const studentSchema = new Schema<IStudent>(
 		registrationID: {
 			type: String,
 			unique: true,
-		},
-		studentName: {
-			type: String,
-			trim: true,
-			required: [true, 'Student name is required!'],
 		},
 		fatherName: {
 			type: String,
@@ -97,11 +93,6 @@ export const studentSchema = new Schema<IStudent>(
 			type: String,
 			trim: true,
 			default: '',
-		},
-		studentEmail: {
-			type: String,
-			required: [true, 'Student email is required!'],
-			trim: true,
 		},
 		minimumEducation: {
 			roll: {

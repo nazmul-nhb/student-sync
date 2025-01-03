@@ -5,6 +5,7 @@ import type {
 	EDUCATION_BOARDS,
 	EXAMINATION_NAMES,
 } from './student.constants';
+import type { IUser } from '../user/user.types';
 
 export type TCourse = keyof typeof COURSE;
 
@@ -17,8 +18,8 @@ export type TExamination = (typeof EXAMINATION_NAMES)[number];
 export type TBoard = (typeof EDUCATION_BOARDS)[number];
 
 export interface IStudentData {
+	user: Types.ObjectId;
 	courseName: TCourse;
-	studentName: string;
 	fatherName: string;
 	motherName: string;
 	dateOfBirth: Date;
@@ -39,7 +40,6 @@ export interface IStudentData {
 	NID: string | null;
 	studentMobile: string;
 	guardianMobile: string | null;
-	studentEmail: string;
 	minimumEducation?: {
 		roll: string | string | null;
 		registration: string | string | null;
@@ -50,8 +50,9 @@ export interface IStudentData {
 	};
 }
 
-export interface IStudent extends IStudentData, Document {
+export interface IStudent extends Omit<IStudentData, "user">, Document {
 	_id: Types.ObjectId;
+	user: Types.ObjectId | IUser;
 	trainingLocation: 'Guler Mor, Natuarpara, Kazipur, Sirajganj';
 	courseDuration: '6 months';
 	registrationID: string;

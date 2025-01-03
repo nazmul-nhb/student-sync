@@ -6,7 +6,7 @@ import type { IStudentData } from './student.types';
 const registerStudent = catchAsync(async (req, res) => {
 	const studentData = req.body as IStudentData;
 
-	const registrationID = await studentServices.createStudentInDB(studentData);
+	const registrationID = await studentServices.createStudentInDB(studentData, req.user?.email);
 
 	sendResponse(res, 'Student', 'POST', { registrationID });
 });

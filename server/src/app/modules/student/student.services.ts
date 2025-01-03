@@ -1,57 +1,54 @@
+import { ErrorWithStatus } from '../../classes/ErrorWithStatus';
+import { STATUS_CODES } from '../../constants';
+import { User } from '../user/user.model';
+import type { IUser } from '../user/user.types';
 import { Student } from './student.model';
 import type { IStudentData, IStudentMinimal } from './student.types';
 
-const createStudentInDB = async (payload: IStudentData) => {
+const createStudentInDB = async (payload: IStudentData, email?: string) => {
+	const user = await User.validateUser(email);
+
+	payload.user = user._id;
+
 	const newStudent = await Student.create(payload);
 
 	return newStudent.registrationID;
 };
 
 const getStudentDataFromDB = async (registrationID: string) => {
-	const studentData = await Student.findOne({ registrationID });
+	const student = await Student.findOne({ registrationID }).populate(
+		'user',
+		'name email image',
+	);
 
-	return studentData;
+	if (!student) {
+		throw new ErrorWithStatus(
+			'Not Found Error',
+			`Student not found with registration id ${registrationID}!`,
+			STATUS_CODES.NOT_FOUND,
+			'student',
+		);
+	}
+
+	return student;
 };
 
 const getAllStudentDataFromDB = async () => {
-	const students: IStudentMinimal[] = await Student.aggregate([
-		// Lookup to find corresponding user based on studentEmail
-		{
-			$lookup: {
-				from: 'users',
-				localField: 'studentEmail',
-				foreignField: 'email',
-				as: 'userInfo',
-			},
-		},
-		// Unwind to turn the userInfo array into an object (if match exists)
-		{
-			$unwind: {
-				path: '$userInfo',
-				preserveNullAndEmptyArrays: true,
-			},
-		},
+	const students = await Student.find()
+		.select('_id courseName registrationID')
+		.populate('user', 'name email image');
 
-		// Add studentImage field from userInfo's image
-		{
-			$addFields: {
-				studentImage: '$userInfo.image',
-			},
-		},
+	const studentsMinimal: IStudentMinimal[] = students.map((student) => {
+		return {
+			_id: student._id,
+			studentName: (student.user as IUser).name,
+			studentImage: (student.user as IUser).image,
+			courseName: student.courseName,
+			registrationID: student.registrationID,
+		};
+	});
 
-		// Select only required fields and exclude userInfo
-		{
-			$project: {
-				_id: 1,
-				studentName: 1,
-				courseName: 1,
-				registrationID: 1,
-				studentImage: 1,
-			},
-		},
-	]);
-
-	return students;
+	return studentsMinimal;
 };
 
 export const studentServices = {

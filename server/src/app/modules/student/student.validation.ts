@@ -9,7 +9,6 @@ import { isMoreThan14 } from '../../utilities/validationUtils';
 
 const creationSchema = z.object({
 	courseName: z.enum(Object.keys(COURSE) as [keyof typeof COURSE]),
-	studentName: z.string().trim().min(1, 'Student name is required'),
 	fatherName: z.string().trim().min(1, 'Father’s name is required'),
 	motherName: z.string().trim().min(1, 'Mother’s name is required'),
 	dateOfBirth: z
@@ -37,7 +36,6 @@ const creationSchema = z.object({
 	NID: z.string().nullable().optional(),
 	studentMobile: z.string().trim().min(1, 'Student mobile is required'),
 	guardianMobile: z.string().trim().nullable().optional(),
-	studentEmail: z.string().email('Invalid email address!'),
 	minimumEducation: z
 		.object({
 			roll: z.string().nullable().optional(),
